@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Acculekhaa – AI Campus Management Store</title>
+<link rel="icon" type="image/png" href="Assets/logo.png">
+<link rel="apple-touch-icon" href="Assets/logo.png">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+:root {
+  --green: #1a7a3c; --green-light: #2ecc71; --gold: #f5a623;
+  --dark: #0d1117; --dark2: #161b22; --dark3: #1c2333;
+  --text: #e6edf3; --text-muted: #8b949e;
+  --border: rgba(255,255,255,0.08); --card-bg: rgba(22,27,34,0.9);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'DM Sans',sans-serif; background:var(--dark); color:var(--text); overflow-x:hidden; }
+body::before {
+  content:''; position:fixed; inset:0;
+  background: radial-gradient(ellipse 80% 60% at 20% 10%,rgba(26,122,60,.18) 0%,transparent 60%),
+              radial-gradient(ellipse 60% 40% at 80% 80%,rgba(245,166,35,.10) 0%,transparent 55%);
+  z-index:0; pointer-events:none;
+}
+
+/* INTRO LOADER (VIDEO OVERLAY) */
+.intro-loader { position:fixed; inset:0; z-index:9999; display:flex; align-items:center; justify-content:center; background:rgba(13,17,23,.92); backdrop-filter:blur(10px); transition:opacity .35s ease, visibility .35s ease; }
+.intro-loader.hidden { opacity:0; visibility:hidden; }
+.intro-loader-video { width:min(92vw, 920px); height:auto; max-height:80vh; border-radius:18px; border:1px solid rgba(255,255,255,.10); box-shadow:0 30px 120px rgba(0,0,0,.65); background:#000; }
+.intro-loader-skip { position:absolute; bottom:22px; right:22px; background:rgba(22,27,34,.75); border:1px solid var(--border); color:var(--text); border-radius:12px; padding:10px 14px; font-family:'DM Sans',sans-serif; font-size:.85rem; cursor:pointer; transition:border-color .2s, background .2s; }
+.intro-loader-skip:hover { border-color:var(--green-light); background:rgba(22,27,34,.95); }
+
+/* NAV */
+nav { position:sticky; top:0; z-index:100; backdrop-filter:blur(20px); background:rgba(13,17,23,.88); border-bottom:1px solid var(--border); padding:0 5%; display:flex; align-items:center; justify-content:space-between; height:72px; }
+.logo { display:flex; align-items:center; gap:12px; text-decoration:none; cursor:pointer; }
+.logo-svg { width:44px; height:44px; }
+.logo-img { height:44px; width:auto; display:block; object-fit:contain; }
+.logo-text { font-family:'Syne',sans-serif; font-weight:700; font-size:1.5rem; color:var(--text); letter-spacing:-.02em; }
+.logo-text span { color:var(--green-light); }
+.nav-links { display:flex; gap:2rem; list-style:none; }
+.nav-links a { color:var(--text-muted); text-decoration:none; font-size:.9rem; font-weight:500; transition:color .2s; cursor:pointer; }
+.nav-links a:hover { color:var(--green-light); }
+.cart-btn { position:relative; background:none; border:1px solid var(--border); border-radius:10px; padding:8px 14px; color:var(--text); cursor:pointer; font-size:1rem; transition:border-color .2s; }
+.cart-btn:hover { border-color:var(--green-light); }
+.cart-badge { position:absolute; top:-6px; right:-6px; background:var(--gold); color:#000; width:18px; height:18px; border-radius:50%; font-size:.65rem; font-weight:700; display:flex; align-items:center; justify-content:center; }
+
+/* PAGES */
+.page { display:none; }
+.page.active { display:block; }
+
+/* HERO */
+.hero { position:relative; z-index:1; padding:100px 5% 80px; text-align:center; }
+.hero-badge { display:inline-flex; align-items:center; gap:8px; background:rgba(26,122,60,.2); border:1px solid rgba(46,204,113,.3); border-radius:100px; padding:6px 16px; font-size:.8rem; color:var(--green-light); font-weight:500; margin-bottom:24px; animation:fadeUp .6s ease both; }
+.hero h1 { font-family:'Syne',sans-serif; font-size:clamp(2.4rem,6vw,5rem); font-weight:800; line-height:1.05; letter-spacing:-.03em; margin-bottom:20px; animation:fadeUp .6s .1s ease both; }
+.hero h1 .accent { color:var(--green-light); }
+.hero h1 .gold { color:var(--gold); }
+.hero p { font-size:1.1rem; color:var(--text-muted); max-width:560px; margin:0 auto 40px; line-height:1.7; animation:fadeUp .6s .2s ease both; }
+.hero-stats { display:flex; justify-content:center; gap:3rem; animation:fadeUp .6s .3s ease both; margin-bottom:60px; }
+.stat { text-align:center; }
+.stat-num { font-family:'Syne',sans-serif; font-size:2rem; font-weight:800; color:var(--green-light); }
+.stat-label { font-size:.8rem; color:var(--text-muted); margin-top:2px; }
+
+/* FILTERS */
+.filters { position:relative; z-index:1; padding:0 5% 40px; display:flex; gap:10px; flex-wrap:wrap; justify-content:center; }
+.filter-btn { padding:8px 20px; border-radius:100px; border:1px solid var(--border); background:var(--dark2); color:var(--text-muted); font-family:'DM Sans',sans-serif; font-size:.85rem; cursor:pointer; transition:all .2s; }
+.filter-btn:hover,.filter-btn.active { background:var(--green); border-color:var(--green); color:#fff; }
+
+.section-title { font-family:'Syne',sans-serif; font-size:1.8rem; font-weight:700; padding:0 5% 30px; position:relative; z-index:1; }
+.products-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:24px; padding:0 5% 80px; position:relative; z-index:1; }
+
+/* CARDS */
+.product-card { background:var(--card-bg); border:1px solid var(--border); border-radius:20px; overflow:hidden; transition:transform .3s,border-color .3s,box-shadow .3s; position:relative; animation:fadeUp .5s ease both; }
+.product-card:hover { transform:translateY(-6px); border-color:rgba(46,204,113,.3); box-shadow:0 20px 60px rgba(0,0,0,.4),0 0 0 1px rgba(46,204,113,.1); }
+.product-card.hidden { display:none; }
+.card-header { height:180px; display:flex; align-items:center; justify-content:center; position:relative; overflow:hidden; }
+.card-icon { font-size:4rem; position:relative; z-index:1; }
+.card-bg-glow { position:absolute; inset:0; opacity:.15; }
+.badge-cat { position:absolute; top:14px; left:14px; background:rgba(0,0,0,.6); backdrop-filter:blur(10px); border:1px solid var(--border); border-radius:100px; padding:4px 10px; font-size:.72rem; font-weight:600; color:var(--text-muted); text-transform:uppercase; letter-spacing:.05em; }
+.badge-new { position:absolute; top:14px; right:14px; background:var(--gold); border-radius:100px; padding:4px 10px; font-size:.72rem; font-weight:700; color:#000; }
+.card-body { padding:20px 22px 22px; }
+.card-body h3 { font-family:'Syne',sans-serif; font-size:1.05rem; font-weight:700; margin-bottom:8px; line-height:1.3; }
+.card-body p { font-size:.83rem; color:var(--text-muted); line-height:1.6; margin-bottom:16px; }
+.card-features { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:18px; }
+.feat-tag { background:rgba(26,122,60,.15); border:1px solid rgba(46,204,113,.2); border-radius:6px; padding:3px 8px; font-size:.72rem; color:var(--green-light); }
+.card-footer { display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap; }
+.price { font-family:'Syne',sans-serif; font-size:1.3rem; font-weight:800; color:var(--text); }
+.price small { font-size:.75rem; font-weight:400; color:var(--text-muted); font-family:'DM Sans',sans-serif; }
+.btn-add { background:var(--green); color:#fff; border:none; border-radius:12px; padding:10px 18px; font-family:'DM Sans',sans-serif; font-size:.85rem; font-weight:600; cursor:pointer; transition:all .2s; }
+.btn-add:hover { background:var(--green-light); transform:scale(1.04); }
+.btn-add.added { background:var(--gold); color:#000; }
+
+/* Inline card stepper */
+.card-stepper { display:none; align-items:center; gap:0; border-radius:12px; overflow:hidden; border:1.5px solid var(--green); }
+.card-stepper.visible { display:flex; }
+.cs-btn { width:34px; height:38px; background:var(--green); color:#fff; border:none; font-size:1.1rem; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:background .15s; flex-shrink:0; }
+.cs-btn:hover { background:var(--green-light); }
+.cs-num { min-width:32px; text-align:center; font-family:'Syne',sans-serif; font-size:.95rem; font-weight:700; color:var(--text); background:var(--dark3); height:38px; display:flex; align-items:center; justify-content:center; padding:0 4px; }
+.btn-learn { background:none; color:var(--green-light); border:1px solid rgba(46,204,113,.3); border-radius:12px; padding:10px 14px; font-family:'DM Sans',sans-serif; font-size:.82rem; font-weight:600; cursor:pointer; transition:all .2s; white-space:nowrap; }
+.btn-learn:hover { background:rgba(46,204,113,.1); }
+
+/* DETAIL PAGE */
+.detail-page { position:relative; z-index:1; padding:0 5% 80px; }
+.breadcrumb { padding:28px 0 10px; font-size:.85rem; color:var(--text-muted); display:flex; align-items:center; gap:8px; }
+.breadcrumb span { cursor:pointer; }
+.breadcrumb span:hover { color:var(--green-light); }
+.breadcrumb .sep { opacity:.4; }
+.breadcrumb .current { color:var(--text); font-weight:500; cursor:default; }
+.detail-hero { display:grid; grid-template-columns:1fr 1fr; gap:60px; align-items:start; padding:40px 0 60px; border-bottom:1px solid var(--border); }
+.detail-hero-icon { font-size:5rem; border-radius:24px; width:120px; height:120px; display:flex; align-items:center; justify-content:center; margin-bottom:20px; }
+.det-cat { display:inline-block; background:rgba(26,122,60,.2); border:1px solid rgba(46,204,113,.3); border-radius:100px; padding:5px 14px; font-size:.78rem; color:var(--green-light); font-weight:600; margin-bottom:14px; text-transform:uppercase; letter-spacing:.06em; }
+.detail-hero h1 { font-family:'Syne',sans-serif; font-size:clamp(1.8rem,4vw,3rem); font-weight:800; line-height:1.15; letter-spacing:-.02em; margin-bottom:14px; }
+.detail-hero p { font-size:1rem; color:var(--text-muted); line-height:1.75; margin-bottom:28px; }
+.det-price-row { display:flex; align-items:center; gap:20px; flex-wrap:wrap; }
+.det-price { font-family:'Syne',sans-serif; font-size:2rem; font-weight:800; color:var(--green-light); }
+.det-price span { font-size:1rem; font-weight:400; color:var(--text-muted); font-family:'DM Sans'; }
+.btn-det-add { background:linear-gradient(135deg,var(--green),var(--green-light)); color:#fff; border:none; border-radius:14px; padding:14px 28px; font-family:'Syne',sans-serif; font-size:1rem; font-weight:700; cursor:pointer; transition:all .2s; }
+.btn-det-add:hover { opacity:.9; transform:scale(1.03); }
+.btn-det-add.added { background:var(--gold); color:#000; }
+.det-side { display:flex; flex-direction:column; gap:14px; }
+.det-stat-box { background:var(--dark2); border:1px solid var(--border); border-radius:16px; padding:18px 22px; display:flex; align-items:center; gap:16px; }
+.det-stat-box .ds-icon { font-size:2rem; }
+.ds-num { font-family:'Syne',sans-serif; font-size:1.5rem; font-weight:800; color:var(--green-light); }
+.ds-label { font-size:.78rem; color:var(--text-muted); margin-top:2px; }
+.detail-sections { padding:50px 0 0; }
+.det-section-grid { display:grid; grid-template-columns:1fr 1fr; gap:22px; margin-bottom:40px; }
+.det-section-card { background:var(--card-bg); border:1px solid var(--border); border-radius:20px; padding:26px; transition:border-color .2s; }
+.det-section-card:hover { border-color:rgba(46,204,113,.25); }
+.det-section-card h3 { font-family:'Syne',sans-serif; font-size:1rem; font-weight:700; margin-bottom:14px; display:flex; align-items:center; gap:8px; }
+.feat-list { list-style:none; }
+.feat-list li { padding:7px 0; border-bottom:1px solid var(--border); font-size:.86rem; color:var(--text-muted); display:flex; align-items:flex-start; gap:10px; line-height:1.5; }
+.feat-list li:last-child { border-bottom:none; }
+.feat-list li::before { content:'✓'; color:var(--green-light); font-weight:700; flex-shrink:0; margin-top:1px; }
+.det-wide-card { background:var(--card-bg); border:1px solid var(--border); border-radius:20px; padding:28px; margin-bottom:22px; }
+.det-wide-card h3 { font-family:'Syne',sans-serif; font-size:1.05rem; font-weight:700; margin-bottom:18px; display:flex; align-items:center; gap:8px; }
+.det-modules-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(170px,1fr)); gap:10px; }
+.mod-chip { background:var(--dark3); border:1px solid var(--border); border-radius:10px; padding:9px 13px; font-size:.82rem; color:var(--text-muted); display:flex; align-items:center; gap:8px; }
+.mod-chip .mc-dot { width:6px; height:6px; border-radius:50%; background:var(--green-light); flex-shrink:0; }
+
+/* CART */
+.cart-overlay { position:fixed; inset:0; background:rgba(0,0,0,.6); backdrop-filter:blur(4px); z-index:200; opacity:0; pointer-events:none; transition:opacity .3s; }
+.cart-overlay.open { opacity:1; pointer-events:all; }
+.cart-sidebar { position:fixed; top:0; right:0; width:420px; max-width:95vw; height:100vh; background:var(--dark2); border-left:1px solid var(--border); z-index:201; transform:translateX(100%); transition:transform .4s cubic-bezier(.16,1,.3,1); display:flex; flex-direction:column; }
+.cart-sidebar.open { transform:translateX(0); }
+.cart-head { padding:24px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
+.cart-head h2 { font-family:'Syne',sans-serif; font-size:1.3rem; font-weight:700; }
+.close-cart { background:none; border:none; color:var(--text-muted); font-size:1.4rem; cursor:pointer; width:36px; height:36px; border-radius:8px; display:flex; align-items:center; justify-content:center; transition:background .2s; }
+.close-cart:hover { background:var(--dark3); }
+.cart-items { flex:1; overflow-y:auto; padding:20px 24px; }
+.cart-item { display:flex; align-items:center; gap:14px; padding:14px 0; border-bottom:1px solid var(--border); }
+.ci-icon { width:50px; height:50px; background:var(--dark3); border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:1.6rem; flex-shrink:0; }
+.ci-info { flex:1; }
+.ci-name { font-size:.9rem; font-weight:600; margin-bottom:2px; }
+.ci-price { font-size:.8rem; color:var(--green-light); font-weight:600; }
+.ci-qty { display:flex; align-items:center; gap:8px; }
+.qty-btn { width:28px; height:28px; background:var(--dark3); border:1px solid var(--border); border-radius:8px; color:var(--text); font-size:1rem; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:background .2s; }
+.qty-btn:hover { background:var(--green); border-color:var(--green); }
+.qty-num { font-size:.9rem; font-weight:600; min-width:20px; text-align:center; }
+.cart-empty { text-align:center; padding:60px 20px; color:var(--text-muted); }
+.cart-empty .empty-icon { font-size:3.5rem; margin-bottom:14px; }
+.cart-footer { padding:20px 24px; border-top:1px solid var(--border); }
+.cart-total { display:flex; justify-content:space-between; margin-bottom:16px; font-family:'Syne',sans-serif; font-size:1.1rem; font-weight:700; }
+.cart-total span:last-child { color:var(--green-light); }
+.btn-checkout { width:100%; background:linear-gradient(135deg,var(--green),var(--green-light)); color:#fff; border:none; border-radius:14px; padding:16px; font-family:'Syne',sans-serif; font-size:1rem; font-weight:700; cursor:pointer; transition:opacity .2s,transform .2s; }
+.btn-checkout:hover { opacity:.9; transform:scale(1.01); }
+
+/* MODAL */
+.modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,.7); backdrop-filter:blur(8px); z-index:300; display:flex; align-items:center; justify-content:center; opacity:0; pointer-events:none; transition:opacity .3s; padding:20px; }
+.modal-overlay.open { opacity:1; pointer-events:all; }
+.modal { background:var(--dark2); border:1px solid var(--border); border-radius:24px; width:100%; max-width:560px; max-height:90vh; overflow-y:auto; padding:36px; transform:scale(.95) translateY(20px); transition:transform .3s; }
+.modal-overlay.open .modal { transform:scale(1) translateY(0); }
+.modal h2 { font-family:'Syne',sans-serif; font-size:1.6rem; font-weight:800; margin-bottom:8px; }
+.modal-sub { color:var(--text-muted); font-size:.9rem; margin-bottom:28px; }
+.form-group { margin-bottom:18px; }
+.form-group label { display:block; font-size:.82rem; font-weight:600; color:var(--text-muted); margin-bottom:7px; text-transform:uppercase; letter-spacing:.05em; }
+.form-group input,.form-group select,.form-group textarea { width:100%; background:var(--dark3); border:1px solid var(--border); border-radius:12px; padding:12px 16px; color:var(--text); font-family:'DM Sans',sans-serif; font-size:.95rem; outline:none; transition:border-color .2s; }
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus { border-color:var(--green-light); }
+.form-group select option { background:var(--dark2); }
+.form-group textarea { resize:vertical; min-height:80px; }
+.form-row { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+.btn-submit { width:100%; background:linear-gradient(135deg,var(--green),var(--green-light)); color:#fff; border:none; border-radius:14px; padding:15px; font-family:'Syne',sans-serif; font-size:1rem; font-weight:700; cursor:pointer; margin-top:8px; transition:opacity .2s; }
+.btn-submit:hover { opacity:.9; }
+.btn-cancel-modal { width:100%; background:none; color:var(--text-muted); border:1px solid var(--border); border-radius:14px; padding:12px; font-family:'DM Sans',sans-serif; font-size:.9rem; cursor:pointer; margin-top:10px; transition:border-color .2s; }
+.btn-cancel-modal:hover { border-color:var(--text-muted); color:var(--text); }
+.success-screen { text-align:center; padding:20px 0; }
+.success-icon { width:80px; height:80px; background:rgba(26,122,60,.2); border:2px solid var(--green-light); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:2.5rem; margin:0 auto 20px; animation:pop .4s ease; }
+.success-screen h2 { font-family:'Syne',sans-serif; font-size:1.6rem; font-weight:800; margin-bottom:10px; }
+.success-screen p { color:var(--text-muted); margin-bottom:28px; }
+
+/* FOOTER */
+footer { position:relative; z-index:1; background:var(--dark2); border-top:1px solid var(--border); padding:50px 5%; }
+.footer-grid { display:grid; grid-template-columns:2fr 1fr 1fr 1fr; gap:40px; margin-bottom:40px; }
+.footer-brand p { color:var(--text-muted); font-size:.85rem; line-height:1.7; margin:16px 0; }
+.footer-col h4 { font-family:'Syne',sans-serif; font-size:.9rem; font-weight:700; margin-bottom:16px; }
+.footer-col .f-link { display:block; color:var(--green-light); text-decoration:none; font-size:.83rem; margin-bottom:9px; cursor:pointer; transition:color .2s; }
+.footer-col .f-link:hover { color:#fff; }
+.footer-col .f-plain { display:block; color:var(--text-muted); font-size:.83rem; margin-bottom:9px; }
+.footer-bottom { border-top:1px solid var(--border); padding-top:24px; display:flex; align-items:center; justify-content:space-between; }
+.footer-bottom p { font-size:.8rem; color:var(--text-muted); }
+.iso-badges { display:flex; gap:10px; }
+.iso-badge { background:var(--dark3); border:1px solid var(--border); border-radius:8px; padding:4px 10px; font-size:.72rem; font-weight:700; color:var(--text-muted); }
+
+@keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+@keyframes pop { from{transform:scale(.5)} to{transform:scale(1)} }
+@media(max-width:900px){.detail-hero{grid-template-columns:1fr;gap:30px}.det-section-grid{grid-template-columns:1fr}.footer-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:768px){.nav-links{display:none}.hero-stats{gap:1.5rem}.form-row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<!-- Intro loader overlay (fake loading) -->
+<div id="introLoader" class="intro-loader" aria-hidden="true">
+  <video id="introLoaderVideo" class="intro-loader-video" autoplay muted playsinline preload="auto">
+    <source src="Assets/Intro.mp4" type="video/mp4">
+  </video>
+  <button class="intro-loader-skip" type="button" onclick="hideIntroLoader()">Skip</button>
+</div>
+
+<nav>
+  <div class="logo" onclick="showPage('home'); setTimeout(() => document.getElementById('products')?.scrollIntoView({behavior:'smooth', block:'start'}), 0);">
+    <img class="logo-img" src="Assets/logo.png" alt="Acculekhaa logo">
+    <span class="logo-text">Acculekhaa<sup style="font-size:.5em;color:var(--gold)">®</sup></span>
+  </div>
+  <ul class="nav-links">
+    <li><a onclick="showPage('home')">All Products</a></li>
+    <li><a onclick="showPage('erp')">Campus ERP</a></li>
+    <li><a onclick="showPage('attendance')">Attendance</a></li>
+    <li><a onclick="showPage('payroll')">Payroll</a></li>
+  </ul>
+  <div>
+    <button class="cart-btn" onclick="toggleCart()">🛒 Cart <span class="cart-badge" id="cartBadge">0</span></button>
+  </div>
+</nav>
+
+
+<!-- ═══ HOME ═══ -->
+<div id="page-home" class="page active">
+<section class="hero">
+  <div class="hero-badge"><span style="width:6px;height:6px;background:var(--green-light);border-radius:50%;display:inline-block"></span> ISO 9001 &amp; ISO 27001 Certified</div>
+  <h1>Next-Gen <span class="accent">AI Campus</span><br>Management <span class="gold">Solutions</span></h1>
+  <p>Revolutionizing education through smart technology — from facial recognition biometrics to CCTV attendance, GPS tracking, and complete campus ERP systems.</p>
+  <div class="hero-stats">
+    <div class="stat"><div class="stat-num">100+</div><div class="stat-label">ERP Modules</div></div>
+    <div class="stat"><div class="stat-num">32</div><div class="stat-label">Multi-Camera AI</div></div>
+    <div class="stat"><div class="stat-num">7+</div><div class="stat-label">Cities &amp; Countries</div></div>
+    <div class="stat"><div class="stat-num">5</div><div class="stat-label">Faces Simultaneously</div></div>
+  </div>
+</section>
+
+<div class="filters">
+  <button class="filter-btn active" onclick="filterProducts('all',this); document.getElementById('products').scrollIntoView({behavior:'smooth', block:'start'});">All Products</button>
+  <button class="filter-btn" onclick="filterProducts('software',this)">Software</button>
+  <button class="filter-btn" onclick="filterProducts('hardware',this)">Hardware</button>
+  <button class="filter-btn" onclick="filterProducts('cctv',this)">AI CCTV</button>
+  <button class="filter-btn" onclick="filterProducts('services',this)">Services</button>
+</div>
+
+<div class="section-title" id="products">Our Products &amp; Solutions</div>
+<div class="products-grid">
+
+  <div class="product-card" data-category="software">
+    <div class="card-header"><div class="card-bg-glow" style="background:linear-gradient(135deg,#1a7a3c,#2ecc71)"></div><div class="card-icon">🏫</div><div class="badge-cat">Software</div><div class="badge-new">Popular</div></div>
+    <div class="card-body"><h3>Campus Management ERP</h3><p>Complete end-to-end campus management with 100+ modules covering all institutional needs.</p>
+    <div class="card-features"><span class="feat-tag">Fee Mgmt</span><span class="feat-tag">Exam Mgmt</span><span class="feat-tag">Library</span><span class="feat-tag">Analytics</span></div>
+    <div class="card-footer"><div class="price">Custom <small>/ quote</small></div><button class="btn-learn" onclick="showPage('erp')">Learn More →</button><button class="btn-add" id="addbtn-Campus_ERP" onclick="cardAdd(this,'Campus ERP','🏫','Custom')">+ Add</button><div class="card-stepper" id="stepper-Campus_ERP"><button class="cs-btn" onclick="cardDec(this,'Campus ERP','🏫','Custom')">−</button><span class="cs-num">1</span><button class="cs-btn" onclick="cardInc(this,'Campus ERP','🏫','Custom')">+</button></div></div></div>
+  </div>
+
+  <div class="product-card" data-category="software">
+    <div class="card-header"><div class="card-bg-glow" style="background:linear-gradient(135deg,#1a5276,#2e86c1)"></div><div class="card-icon">📋</div><div class="badge-cat">Software</div></div>
+    <div class="card-body"><h3>Attendance Management System</h3><p>Cloud-based attendance system with GEO attendance, mobile app, and instant SMS alerts.</p>
+    <div class="card-features"><span class="feat-tag">Cloud Based</span><span class="feat-tag">Mobile APP</span><span class="feat-tag">GEO Track</span></div>
+    <div class="card-footer"><div class="price">&#8377;15,000 <small>/ year</small></div><button class="btn-learn" onclick="showPage('attendance')">Learn More →</button><button class="btn-add" id="addbtn-Attendance_Mgmt" onclick="cardAdd(this,'Attendance Mgmt','📋','₹15,000')">+ Add</button><div class="card-stepper" id="stepper-Attendance_Mgmt"><button class="cs-btn" onclick="cardDec(this,'Attendance Mgmt','📋','₹15,000')">−</button><span class="cs-num">1</span><button class="cs-btn" onclick="cardInc(this,'Attendance Mgmt','📋','₹15,000')">+</button></div></div></div>
+  </div>
+
+  <div class="product-card" data-category="software">
+    <div class="card-header"><div class="card-bg-glow" style="background:linear-gradient(135deg,#6c3483,#a569bd)"></div><div class="card-icon">💰</div><div class="badge-cat">Software</div></div>
+    <div class="card-body"><h3>Payroll &amp; HRMS</h3><p>Complete payroll processing, HR management and salary disbursement automation platform.</p>
+    <div class="card-features"><span class="feat-tag">Payroll</span><span class="feat-tag">Leave Mgmt</span><span class="feat-tag">Compliance</span></div>
+    <div class="card-footer"><div class="price">&#8377;12,000 <small>/ year</small></div><button class="btn-learn" onclick="showPage('payroll')">Learn More →</button><button class="btn-add" id="addbtn-Payroll_and_HRMS" onclick="cardAdd(this,'Payroll & HRMS','💰','₹12,000')">+ Add</button><div class="card-stepper" id="stepper-Payroll_and_HRMS"><button class="cs-btn" onclick="cardDec(this,'Payroll & HRMS','💰','₹12,000')">−</button><span class="cs-num">1</span><button class="cs-btn" onclick="cardInc(this,'Payroll & HRMS','💰','₹12,000')">+</button></div></div></div>
+  </div>
+
+  <div class="product-card" data-category="software">
+    <div class="card-header"><div class="card-bg-glow" style="background:linear-gradient(135deg,#1a5276,#148f77)"></div><div class="card-icon">📊</div><div class="badge-cat">Software</div></div>
+    <div class="card-body"><h3>Accounting &amp; Inventory</h3><p>Integrated accounting, inventory tracking and financial management for educational institutions.</p>
+    <div class="card-features"><span class="feat-tag">Ledger</span><span class="feat-tag">Inventory</span><span class="feat-tag">GST Ready</span></div>
+    <div class="card-footer"><div class="price">&#8377;10,000 <small>/ year</small></div><button class="btn-learn" onclick="showPage('accounting')">Learn More →</button><button class="btn-add" id="addbtn-Accounting_and_Inventory" onclick="cardAdd(this,'Accounting & Inventory','📊','₹10,000')">+ Add</button><div class="card-stepper" id="stepper-Accounting_and_Inventory"><button class="cs-btn" onclick="cardDec(this,'Accounting & Inventory','📊','₹10,000')">−</button><span class="cs-num">1</span><button class="cs-btn" onclick="cardInc(this,'Accounting & Inventory','📊','₹10,000')">+</button></div></div></div>
+  </div>
+
+  <div class="product-card" data-category="software">
+    <div class="card-header"><div class="card-bg-glow" style="background:linear-gradient(135deg,#784212,#ca6f1e)"></div><div class="card-icon">🔍</div><div class="badge-cat">Software</div></div>
+    <div class="card-body"><h3>Background Verification Software</h3><p>Automated background verification and screening system for staff and student onboarding.</p>
+    <div class="card-features"><span class="feat-tag">Auto Verify</span><span class="feat-tag">Reports</span><span class="feat-tag">API Ready</span></div>
+    <div class="card-footer"><div class="price">&#8377;8,000 <small>/ year</small></div><button class="btn-learn" onclick="showPage('bgv')">Learn More →</button><button class="btn-add" id="addbtn-BGV_Software" onclick="cardAdd(this,'BGV Software','🔍','₹8,000')">+ Add</button><div class="card-stepper" id="stepper-BGV_Software"><button class="cs-btn" onclick="cardDec(this,'BGV Software','🔍','₹8,000')">−</button><span class="cs-num">1</span><button class="cs-btn" onclick="cardInc(this,'BGV Software','🔍','₹8,000')">+</button></div></div></div>
+  </div>
+
+  <div class="product-card" data-category="hardware">
+    <div class="card-header"><div class="card-bg-glow" style="background:linear-gradient(135deg,#1a7a3c,#f5a623)"></div><div class="card-icon">🤖</div><div class="badge-cat">Hardware</div><div class="badge-new">AI</div></div>
+    <div class="card-body"><h3>AI Facial Recognition Biometric</h3><p>Recognizes 5 faces simultaneously with 3-meter range. RF card access + instant SMS notifications.</p>
+    <div class="card-features"><span class="feat-tag">5-Face Sim.</span><span class="feat-tag">3m Range</span><span class="feat-tag">RF Card</span></div>
+    <div class="card-footer"><div class="price">&#8377;45,000 <small>/ unit</small></div><button class="btn-add" id="addbtn-AI_Face_Biometric" onclick="cardAdd(this,'AI Face Biometric','🤖','₹45,000')">+ Add</button><div class="card-stepper" id="stepper-AI_Face_Biometric"><button class="cs-btn" onclick="cardDec(this,'AI Face Biometric','🤖','₹45,000')">−</button><span class="cs-num">1</span><button class="cs-btn" onclick="cardInc(this,'AI Face Biometric','🤖','₹45,000')">+</button></div></div></div>
+  </div>
+
+  <div class="product-card" data-category="hardware">
+    <div class="card-header"><div class="card-bg-glow" style="background:linear-gradient(135deg,#1a5276,#1abc9c)"></div><div class="card-icon">🔐</div><div class="badge-cat">Hardware</div></div>
+    <div class="card-body"><h3>Access Control System</h3><p>Smart door access control with biometric and card-based authentication for secure campus entry.</p>
+    <div class="card-features"><span class="feat-tag">Card Based</span><span class="feat-tag">Biometric</span><span class="feat-tag">Audit Log</span></div>
+    <div class="card-footer"><div class="price">&#8377;18,000 <small>/ door</small></div><button class="btn-add" id="addbtn-Access_Control" onclick="cardAdd(this,'Access Control','🔐','₹18,000')">+ Add</button><div class="card-stepper" id="stepper-Access_Control"><button class="cs-btn" onclick="cardDec(this,'Access Control','🔐','₹18,000')">−</button><span class="cs-num">1</span><button class="cs-btn" onclick="cardInc(this,'Access Control','🔐','₹18,000')">+</button></div></div></div>
+  </div>
+
+  <div class="product-card" data-category="hardware">
+    <div class="card-header"><div class="card-bg-glow" style="background:linear-gradient(135deg,#922b21,#e74c3c)"></div><div class="card-icon">🚧</div><div class="badge-cat">Hardware</div></div>
+    <div class="card-body"><h3>Flap Barrier</h3><p>Elegant flap barrier turnstile for controlling pedestrian access at campus entrances securely.</p>
+    <div class="card-features"><span class="feat-tag">Bi-directional</span><span class="feat-tag">Anti-tailgate</span><span class="feat-tag">Stainless</span></div>
+    <div class="card-footer"><div class="price">&#8377;65,000 <small>/ lane</small></div><button class="btn-add" id="addbtn-Flap_Barrier" onclick="cardAdd(this,'Flap Barrier','🚧','₹65,000')">+ Add</button><div class="card-stepper" id="stepper-Flap_Barrier"><button class="cs-btn" onclick="cardDec(this,'Flap Barrier','🚧','₹65,000')">−</button><span class="cs-num">1</span><button class="cs-btn" onclick="cardInc(this,'Flap Barrier','🚧','₹65,000')">+</button></div></div></div>
+  </div>
+
+  <div class="product-card" data-category="hardware">
+    <div class="card-header"><div class="card-bg-glow" style="background:linear-gradient(135deg,#1a7a3c,#17202a)"></div><div class="card-icon">🚗</div><div class="badge-cat">Hardware</div><div class="badge-new">ANPR</div></div>
+    <div class="card-body"><h3>Boom Barrier + ANPR</h3><p>Automated boom barrier with number plate recognition for seamless vehicle access management.</p>
+    <div class="card-features"><span class="feat-tag">ANPR</span><span class="feat-tag">Auto Lift</span><span class="feat-tag">Cloud Log</span></div>
+    <div class="card-footer"><div class="price">&#8377;80,000 <small>/ unit</small></div><button class="btn-add" id="addbtn-Boom_Barrier+ANPR" onclick="cardAdd(this,'Boom Barrier+ANPR','🚗','₹80,000')">+ Add</button><div class="card-stepper" id="stepper-Boom_Barrier+ANPR"><button class="cs-btn" onclick="cardDec(this,'Boom Barrier+ANPR','🚗','₹80,000')">−</button><span class="cs-num">1</span><button class="cs-btn" onclick="cardInc(this,'Boom Barrier+ANPR','🚗','₹80,000')">+</button></div></div></div>
+  </div>
+
+  <div class="product-card" data-category="hardware">
+    <div class="card-header"><div class="card-bg-glow" style="background:linear-gradient(135deg,#145a32,#f5a623)"></div><div class="card-icon">📡</div><div class="badge-cat">Hardware</div></div>
+    <div class="card-body"><h3>UHF Reader</h3><p>Long-range UHF RFID reader for contactless identification and tracking across large distances.</p>
+    <div class="card-features"><span class="feat-tag">Long Range</span><span class="feat-tag">Multi-tag</span><span class="feat-tag">Rugged IP</span></div>
+    <div class="card-footer"><div class="price">&#8377;22,000 <small>/ unit</small></div><button class="btn-add" id="addbtn-UHF_Reader" onclick="cardAdd(this,'UHF Reader','📡','₹22,000')">+ Add</button><div class="card-stepper" id="stepper-UHF_Reader"><button class="cs-btn" onclick="cardDec(this,'UHF Reader','📡','₹22,000')">−</button><span class="cs-num">1</span><button class="cs-btn" onclick="cardInc(this,'UHF Reader','📡','₹22,000')">+</button></div></div></div>
+  </div>
+
+  <div class="product-card" data-category="hardware">
+    <div class="card-header"><div class="card-bg-glow" style="background:linear-gradient(135deg,#1a3a5c,#2e86c1)"></div><div class="card-icon">🚌</div><div class="badge-cat">Hardware</div></div>
+    <div class="card-body"><h3>GPS Tracker + Bus Camera</h3><p>Real-time GPS vehicle tracking combined with interior bus camera for student safety monitoring.</p>
+    <div class="card-features"><span class="feat-tag">Live Track</span><span class="feat-tag">Bus Camera</span><span class="feat-tag">Parent App</span></div>
+    <div class="card-footer"><div class="price">&#8377;12,000 <small>/ vehicle</small></div><button class="btn-add" id="addbtn-GPS+Bus_Camera" onclick="cardAdd(this,'GPS+Bus Camera','🚌','₹12,000')">+ Add</button><div class="card-stepper" id="stepper-GPS+Bus_Camera"><button class="cs-btn" onclick="cardDec(this,'GPS+Bus Camera','🚌','₹12,000')">−</button><span class="cs-num">1</span><button class="cs-btn" onclick="cardInc(this,'GPS+Bus Camera','🚌','₹12,000')">+</button></div></div></div>
+  </div>
+
+  <div class="product-card" data-category="hardware">
+    <div class="card-header"><div class="card-bg-glow" style="background:linear-gradient(135deg,#1a7a3c,#f5a623)"></div><div class="card-icon">📚</div><div class="badge-cat">Hardware</div></div>
+    <div class="card-body"><h3>Library Asset Tracking</h3><p>RFID-based library book and asset tracking with automated check-in/check-out management.</p>
+    <div class="card-features"><span class="feat-tag">RFID</span><span class="feat-tag">Auto Check-in</span><span class="feat-tag">Analytics</span></div>
+    <div class="card-footer"><div class="price">&#8377;28,000 <small>/ setup</small></div><button class="btn-add" id="addbtn-Library_Tracking" onclick="cardAdd(this,'Library Tracking','📚','₹28,000')">+ Add</button><div class="card-stepper" id="stepper-Library_Tracking"><button class="cs-btn" onclick="cardDec(this,'Library Tracking','📚','₹28,000')">−</button><span class="cs-num">1</span><button class="cs-btn" onclick="cardInc(this,'Library Tracking','📚','₹28,000')">+</button></div></div></div>
+  </div>
+
+  <div class="product-card" data-category="hardware">
+    <div class="card-header"><div class="card-bg-glow" style="background:linear-gradient(135deg,#2c3e50,#1abc9c)"></div><div class="card-icon">🖥️</div><div class="badge-cat">Hardware</div><div class="badge-new">Smart</div></div>
+    <div class="card-body"><h3>Interactive Panel</h3><p>Smart interactive display for classrooms with touch-enabled teaching, content sharing and live collaboration.</p>
+    <div class="card-features"><span class="feat-tag">Touch</span><span class="feat-tag">Wireless Share</span><span class="feat-tag">Classroom</span></div>
+    <div class="card-footer"><div class="price">Custom <small>/ quote</small></div><button class="btn-add" id="addbtn-Interactive_Panel" onclick="cardAdd(this,'Interactive Panel','🖥️','Custom')">+ Add</button><div class="card-stepper" id="stepper-Interactive_Panel"><button class="cs-btn" onclick="cardDec(this,'Interactive Panel','🖥️','Custom')">−</button><span class="cs-num">1</span><button class="cs-btn" onclick="cardInc(this,'Interactive Panel','🖥️','Custom')">+</button></div></div></div>
+  </div>
+
+  <div class="product-card" data-category="cctv">
+    <div class="card-header"><div class="card-bg-glow" style="background:linear-gradient(135deg,#1a7a3c,#2c3e50)"></div><div class="card-icon">📷</div><div class="badge-cat">AI CCTV</div><div class="badge-new">AI</div></div>
+    <div class="card-body"><h3>AI CCTV Classroom Attendance</h3><p>Automatic classroom attendance using AI camera vision — no manual roll call, up to 32 cameras.</p>
+    <div class="card-features"><span class="feat-tag">Auto Attend.</span><span class="feat-tag">Crowd Mgmt</span><span class="feat-tag">32 Cams</span></div>
+    <div class="card-footer"><div class="price">&#8377;35,000 <small>/ camera</small></div><button class="btn-add" id="addbtn-AI_CCTV_Attendance" onclick="cardAdd(this,'AI CCTV Attendance','📷','₹35,000')">+ Add</button><div class="card-stepper" id="stepper-AI_CCTV_Attendance"><button class="cs-btn" onclick="cardDec(this,'AI CCTV Attendance','📷','₹35,000')">−</button><span class="cs-num">1</span><button class="cs-btn" onclick="cardInc(this,'AI CCTV Attendance','📷','₹35,000')">+</button></div></div></div>
+  </div>
+
+  <div class="product-card" data-category="cctv">
+    <div class="card-header"><div class="card-bg-glow" style="background:linear-gradient(135deg,#512e5f,#c0392b)"></div><div class="card-icon">🧠</div><div class="badge-cat">AI CCTV</div></div>
+    <div class="card-body"><h3>AI Behavior &amp; Mood Detection</h3><p>Advanced AI camera detecting gender, mood, behavior patterns, and physical attributes in real-time.</p>
+    <div class="card-features"><span class="feat-tag">Mood AI</span><span class="feat-tag">Gender Detect</span><span class="feat-tag">Behavior</span></div>
+    <div class="card-footer"><div class="price">&#8377;55,000 <small>/ camera</small></div><button class="btn-add" id="addbtn-AI_Behavior_Camera" onclick="cardAdd(this,'AI Behavior Camera','🧠','₹55,000')">+ Add</button><div class="card-stepper" id="stepper-AI_Behavior_Camera"><button class="cs-btn" onclick="cardDec(this,'AI Behavior Camera','🧠','₹55,000')">−</button><span class="cs-num">1</span><button class="cs-btn" onclick="cardInc(this,'AI Behavior Camera','🧠','₹55,000')">+</button></div></div></div>
+  </div>
+
+  <div class="product-card" data-category="cctv">
+    <div class="card-header"><div class="card-bg-glow" style="background:linear-gradient(135deg,#154360,#1abc9c)"></div><div class="card-icon">🚪</div><div class="badge-cat">AI CCTV</div><div class="badge-new">Gate</div></div>
+    <div class="card-body"><h3>AI Entrance Gate Attendance</h3><p>Automated attendance at entry/exit points with real-time logs, alerts, and dashboards for admins &amp; parents.</p>
+    <div class="card-features"><span class="feat-tag">Entry/Exit</span><span class="feat-tag">Live Log</span><span class="feat-tag">Alerts</span></div>
+    <div class="card-footer"><div class="price">&#8377;40,000 <small>/ camera</small></div><button class="btn-add" id="addbtn-AI_Gate_Attendance" onclick="cardAdd(this,'AI Gate Attendance','🚪','₹40,000')">+ Add</button><div class="card-stepper" id="stepper-AI_Gate_Attendance"><button class="cs-btn" onclick="cardDec(this,'AI Gate Attendance','🚪','₹40,000')">−</button><span class="cs-num">1</span><button class="cs-btn" onclick="cardInc(this,'AI Gate Attendance','🚪','₹40,000')">+</button></div></div></div>
+  </div>
+
+  <div class="product-card" data-category="cctv">
+    <div class="card-header"><div class="card-bg-glow" style="background:linear-gradient(135deg,#7d6608,#f5a623)"></div><div class="card-icon">👥</div><div class="badge-cat">AI CCTV</div><div class="badge-new">Crowd</div></div>
+    <div class="card-body"><h3>Crowd Management &amp; People Tracking</h3><p>AI analytics for crowd density, movement patterns, and people tracking in corridors, gates, and common areas.</p>
+    <div class="card-features"><span class="feat-tag">Heatmaps</span><span class="feat-tag">Tracking</span><span class="feat-tag">Density</span></div>
+    <div class="card-footer"><div class="price">&#8377;50,000 <small>/ camera</small></div><button class="btn-add" id="addbtn-Crowd_Tracking" onclick="cardAdd(this,'Crowd & People Tracking','👥','₹50,000')">+ Add</button><div class="card-stepper" id="stepper-Crowd_Tracking"><button class="cs-btn" onclick="cardDec(this,'Crowd & People Tracking','👥','₹50,000')">−</button><span class="cs-num">1</span><button class="cs-btn" onclick="cardInc(this,'Crowd & People Tracking','👥','₹50,000')">+</button></div></div></div>
+  </div>
+
+  <div class="product-card" data-category="services">
+    <div class="card-header"><div class="card-bg-glow" style="background:linear-gradient(135deg,#1d6a27,#25d366)"></div><div class="card-icon">💬</div><div class="badge-cat">Services</div><div class="badge-new">2-Way</div></div>
+    <div class="card-body"><h3>Business WhatsApp &amp; Chatbot</h3><p>2-way WhatsApp communication, chatbot automation, and RCS rich messaging for campus alerts.</p>
+    <div class="card-features"><span class="feat-tag">2-Way WA</span><span class="feat-tag">Chatbot</span><span class="feat-tag">RCS</span></div>
+    <div class="card-footer"><div class="price">&#8377;6,000 <small>/ month</small></div><button class="btn-add" id="addbtn-WhatsApp_Service" onclick="cardAdd(this,'WhatsApp Service','💬','₹6,000')">+ Add</button><div class="card-stepper" id="stepper-WhatsApp_Service"><button class="cs-btn" onclick="cardDec(this,'WhatsApp Service','💬','₹6,000')">−</button><span class="cs-num">1</span><button class="cs-btn" onclick="cardInc(this,'WhatsApp Service','💬','₹6,000')">+</button></div></div></div>
+  </div>
+
+  <div class="product-card" data-category="services">
+    <div class="card-header"><div class="card-bg-glow" style="background:linear-gradient(135deg,#1a5276,#2980b9)"></div><div class="card-icon">📢</div><div class="badge-cat">Services</div></div>
+    <div class="card-body"><h3>Bulk SMS &amp; Voice Broadcasting</h3><p>Mass SMS, voice call broadcasting, and email campaigns for instant parent and student notifications.</p>
+    <div class="card-features"><span class="feat-tag">Bulk SMS</span><span class="feat-tag">Voice Call</span><span class="feat-tag">Email</span></div>
+    <div class="card-footer"><div class="price">&#8377;3,000 <small>/ month</small></div><button class="btn-add" id="addbtn-Bulk_SMS+Voice" onclick="cardAdd(this,'Bulk SMS+Voice','📢','₹3,000')">+ Add</button><div class="card-stepper" id="stepper-Bulk_SMS+Voice"><button class="cs-btn" onclick="cardDec(this,'Bulk SMS+Voice','📢','₹3,000')">−</button><span class="cs-num">1</span><button class="cs-btn" onclick="cardInc(this,'Bulk SMS+Voice','📢','₹3,000')">+</button></div></div></div>
+  </div>
+
+</div><!-- /products-grid -->
+
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="logo" onclick="showPage('home'); setTimeout(() => document.getElementById('products')?.scrollIntoView({behavior:'smooth', block:'start'}), 0);">
+        <img class="logo-img" src="Assets/logo.png" alt="Acculekhaa logo">
+        <span class="logo-text">Acculekhaa<sup style="font-size:.5em;color:var(--gold)">®</sup></span>
+      </div>
+      <p>Leading Edu-Tech Company revolutionizing education management through AI-powered Campus Management ERP systems with 100+ modules.</p>
+      <p style="color:var(--green-light);font-size:.82rem;">📞 +91-90324 06513 | 95050 47676<br>✉ <a href="mailto:info@acculekhaa.com" style="color:inherit;text-decoration:none;">info@acculekhaa.com</a></p>
+    </div>
+    <div class="footer-col">
+      <h4>Software</h4>
+      <span class="f-link" onclick="showPage('erp')">Campus ERP</span>
+      <span class="f-link" onclick="showPage('attendance')">Attendance Mgmt</span>
+      <span class="f-link" onclick="showPage('payroll')">Payroll &amp; HRMS</span>
+      <span class="f-link" onclick="showPage('accounting')">Accounting</span>
+      <span class="f-link" onclick="showPage('bgv')">BGV Software</span>
+    </div>
+    <div class="footer-col">
+      <h4>Hardware</h4>
+      <span class="f-plain">AI Face Biometric</span>
+      <span class="f-plain">CCTV Attendance</span>
+      <span class="f-plain">Access Control</span>
+      <span class="f-plain">Flap / Boom Barrier</span>
+      <span class="f-plain">GPS Trackers</span>
+    </div>
+    <div class="footer-col">
+      <h4>Offices</h4>
+      <span class="f-plain">Delhi</span>
+      <span class="f-plain">Hyderabad</span>
+      <span class="f-plain">Mumbai</span>
+      <span class="f-plain">Bengaluru</span>
+      <span class="f-plain">Chennai</span>
+      <span class="f-plain">Dubai &amp; KSA</span>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2025 Acculekhaa. All rights reserved. | www.acculekhaa.com</p>
+    <div class="iso-badges"><div class="iso-badge">ISO 9001</div><div class="iso-badge">ISO 27001</div></div>
+  </div>
+</footer>
+</div><!-- /page-home -->
+
+
+<!-- ═══ CAMPUS ERP DETAIL ═══ -->
+<div id="page-erp" class="page">
+<div class="detail-page">
+  <div class="breadcrumb">
+    <span onclick="showPage('home')">🏠 Home</span><span class="sep">/</span>
+    <span onclick="showPage('home')">Products</span><span class="sep">/</span>
+    <span class="current">Campus Management ERP</span>
+  </div>
+  <div class="detail-hero">
+    <div>
+      <div class="detail-hero-icon" style="background:linear-gradient(135deg,rgba(26,122,60,.3),rgba(46,204,113,.1))">🏫</div>
+      <div class="det-cat">Software · Campus</div>
+      <h1>Campus Management ERP</h1>
+      <p>Acculekhaa's flagship Campus Management ERP is a comprehensive, cloud-ready solution purpose-built for educational institutions. With over 100 integrated modules, it covers every dimension of campus operations — from first-day admission to alumni management — in a single unified platform.</p>
+      <div class="det-price-row">
+        <div class="det-price">Custom <span>pricing / quote</span></div>
+        <button class="btn-det-add" id="erp-btn" onclick="detailAdd('erp-btn','Campus ERP','🏫','Custom')">+ Add to Cart</button>
+      </div>
+    </div>
+    <div class="det-side">
+      <div class="det-stat-box"><div class="ds-icon">📦</div><div><div class="ds-num">100+</div><div class="ds-label">Integrated Modules</div></div></div>
+      <div class="det-stat-box"><div class="ds-icon">☁️</div><div><div class="ds-num">Cloud</div><div class="ds-label">Web &amp; Mobile Ready</div></div></div>
+      <div class="det-stat-box"><div class="ds-icon">🔒</div><div><div class="ds-num">ISO</div><div class="ds-label">27001 Certified</div></div></div>
+      <div class="det-stat-box"><div class="ds-icon">🌍</div><div><div class="ds-num">7+</div><div class="ds-label">Countries Deployed</div></div></div>
+    </div>
+  </div>
+  <div class="detail-sections">
+    <div class="det-wide-card">
+      <h3>📋 All Modules Included</h3>
+      <div class="det-modules-grid">
+        <div class="mod-chip"><span class="mc-dot"></span>Student Information</div>
+        <div class="mod-chip"><span class="mc-dot"></span>Fee Management</div>
+        <div class="mod-chip"><span class="mc-dot"></span>Payment Gateway</div>
+        <div class="mod-chip"><span class="mc-dot"></span>Accounts Management</div>
+        <div class="mod-chip"><span class="mc-dot"></span>Inventory Management</div>
+        <div class="mod-chip"><span class="mc-dot"></span>Certificate Management</div>
+        <div class="mod-chip"><span class="mc-dot"></span>Examination Management</div>
+        <div class="mod-chip"><span class="mc-dot"></span>Attendance Management</div>
+        <div class="mod-chip"><span class="mc-dot"></span>Payroll Management</div>
+        <div class="mod-chip"><span class="mc-dot"></span>Reporting &amp; Analytics</div>
+        <div class="mod-chip"><span class="mc-dot"></span>Communication Tools</div>
+        <div class="mod-chip"><span class="mc-dot"></span>Library Management</div>
+        <div class="mod-chip"><span class="mc-dot"></span>Transport Management</div>
+        <div class="mod-chip"><span class="mc-dot"></span>Alumni Management</div>
+        <div class="mod-chip"><span class="mc-dot"></span>Hostel Management</div>
+        <div class="mod-chip"><span class="mc-dot"></span>Canteen Management</div>
+      </div>
+    </div>
+    <div class="det-section-grid">
+      <div class="det-section-card">
+        <h3>✨ Key Features</h3>
+        <ul class="feat-list">
+          <li>Role-based access for Admin, Teachers, Parents &amp; Students</li>
+          <li>Real-time dashboards and drill-down analytics</li>
+          <li>Automated fee reminders and online payment collection</li>
+          <li>Paperless exam scheduling and result processing</li>
+          <li>Multi-branch and multi-campus support</li>
+          <li>WhatsApp, SMS and email communication hub</li>
+          <li>Mobile app for iOS and Android</li>
+        </ul>
+      </div>
+      <div class="det-section-card">
+        <h3>🎯 Who Is It For?</h3>
+        <ul class="feat-list">
+          <li>Schools (K-12) and Pre-schools</li>
+          <li>Junior &amp; Degree Colleges</li>
+          <li>Engineering and Professional Institutions</li>
+          <li>Coaching Centers and Ed-Tech Startups</li>
+          <li>University Campuses with multiple departments</li>
+          <li>International schools in Middle East &amp; Gulf</li>
+          <li>Government schools and aided institutions</li>
+        </ul>
+      </div>
+      <div class="det-section-card">
+        <h3>⚙️ Technical Specs</h3>
+        <ul class="feat-list">
+          <li>Cloud-hosted SaaS with 99.9% uptime SLA</li>
+          <li>REST API for third-party integrations</li>
+          <li>Supports MySQL &amp; PostgreSQL databases</li>
+          <li>HTTPS encryption end-to-end</li>
+          <li>Automated daily backups &amp; disaster recovery</li>
+          <li>Scalable from 200 to 50,000+ students</li>
+        </ul>
+      </div>
+      <div class="det-section-card">
+        <h3>🛡️ Support &amp; Onboarding</h3>
+        <ul class="feat-list">
+          <li>Dedicated account manager assigned</li>
+          <li>On-site training and remote onboarding</li>
+          <li>24/7 helpdesk via phone, email &amp; chat</li>
+          <li>Free data migration from legacy systems</li>
+          <li>Quarterly product update releases</li>
+          <li>Custom module development on request</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ═══ ATTENDANCE DETAIL ═══ -->
+<div id="page-attendance" class="page">
+<div class="detail-page">
+  <div class="breadcrumb">
+    <span onclick="showPage('home')">🏠 Home</span><span class="sep">/</span>
+    <span onclick="showPage('home')">Products</span><span class="sep">/</span>
+    <span class="current">Attendance Management</span>
+  </div>
+  <div class="detail-hero">
+    <div>
+      <div class="detail-hero-icon" style="background:linear-gradient(135deg,rgba(26,82,118,.3),rgba(46,134,193,.1))">📋</div>
+      <div class="det-cat">Software · Attendance</div>
+      <h1>Attendance Management System</h1>
+      <p>Acculekhaa's cloud-based attendance platform eliminates paperwork and manual tracking entirely. Powered by AI facial biometrics, GEO-fencing, mobile selfie capture, and RFID — it automates the complete attendance lifecycle for students, teachers, and non-teaching staff.</p>
+      <div class="det-price-row">
+        <div class="det-price">&#8377;15,000 <span>/ year</span></div>
+        <button class="btn-det-add" id="att-btn" onclick="detailAdd('att-btn','Attendance Mgmt','📋','₹15,000')">+ Add to Cart</button>
+      </div>
+    </div>
+    <div class="det-side">
+      <div class="det-stat-box"><div class="ds-icon">😊</div><div><div class="ds-num">5</div><div class="ds-label">Faces Simultaneously</div></div></div>
+      <div class="det-stat-box"><div class="ds-icon">📏</div><div><div class="ds-num">3m</div><div class="ds-label">Recognition Range</div></div></div>
+      <div class="det-stat-box"><div class="ds-icon">📲</div><div><div class="ds-num">SMS</div><div class="ds-label">Instant Parent Alerts</div></div></div>
+      <div class="det-stat-box"><div class="ds-icon">☁️</div><div><div class="ds-num">Cloud</div><div class="ds-label">Real-time Reporting</div></div></div>
+    </div>
+  </div>
+  <div class="detail-sections">
+    <div class="det-section-grid">
+      <div class="det-section-card">
+        <h3>🔑 Core Features</h3>
+        <ul class="feat-list">
+          <li>AI Face Biometric — contactless, hygienic ID</li>
+          <li>RF Card swipe-based backup attendance</li>
+          <li>Instant SMS to parents on entry/exit</li>
+          <li>Staff shift management &amp; tracking</li>
+          <li>Mobile app for iOS &amp; Android</li>
+          <li>GEO attendance with GPS boundary enforcement</li>
+          <li>Selfie image upload for remote/field staff</li>
+          <li>Full Payroll &amp; HRMS integration</li>
+        </ul>
+      </div>
+      <div class="det-section-card">
+        <h3>📊 Reports &amp; Analytics</h3>
+        <ul class="feat-list">
+          <li>Daily, weekly, monthly summaries</li>
+          <li>Classwise and subjectwise reports</li>
+          <li>Absenteeism trend charts and heatmaps</li>
+          <li>Low attendance alerts and auto notifications</li>
+          <li>Export to Excel, PDF, and CSV</li>
+          <li>Live dashboard with real-time headcount</li>
+        </ul>
+      </div>
+      <div class="det-section-card">
+        <h3>🤖 AI CCTV Integration</h3>
+        <ul class="feat-list">
+          <li>Auto classroom roll-call via ceiling cameras</li>
+          <li>Zero manual intervention required</li>
+          <li>Crowd density monitoring at gates</li>
+          <li>Support for up to 32 cameras at a time</li>
+          <li>Facial recognition with partial occlusion</li>
+        </ul>
+      </div>
+      <div class="det-section-card">
+        <h3>🔗 Integration Ecosystem</h3>
+        <ul class="feat-list">
+          <li>Seamless Campus ERP connectivity</li>
+          <li>WhatsApp &amp; SMS gateway built-in</li>
+          <li>Works with existing biometric hardware</li>
+          <li>API for LMS and third-party tools</li>
+          <li>Active Directory / SSO login support</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ═══ PAYROLL DETAIL ═══ -->
+<div id="page-payroll" class="page">
+<div class="detail-page">
+  <div class="breadcrumb">
+    <span onclick="showPage('home')">🏠 Home</span><span class="sep">/</span>
+    <span onclick="showPage('home')">Products</span><span class="sep">/</span>
+    <span class="current">Payroll &amp; HRMS</span>
+  </div>
+  <div class="detail-hero">
+    <div>
+      <div class="detail-hero-icon" style="background:linear-gradient(135deg,rgba(108,52,131,.3),rgba(165,105,189,.1))">💰</div>
+      <div class="det-cat">Software · HR</div>
+      <h1>Payroll &amp; HRMS</h1>
+      <p>A complete Human Resources and Payroll Management System for educational institutions. Automates salary computation, statutory deductions, leave management, and employee lifecycle — all integrated with attendance for zero manual data entry.</p>
+      <div class="det-price-row">
+        <div class="det-price">&#8377;12,000 <span>/ year</span></div>
+        <button class="btn-det-add" id="pay-btn" onclick="detailAdd('pay-btn','Payroll & HRMS','💰','₹12,000')">+ Add to Cart</button>
+      </div>
+    </div>
+    <div class="det-side">
+      <div class="det-stat-box"><div class="ds-icon">👥</div><div><div class="ds-num">∞</div><div class="ds-label">Employee Profiles</div></div></div>
+      <div class="det-stat-box"><div class="ds-icon">🇮🇳</div><div><div class="ds-num">PF/ESI</div><div class="ds-label">Statutory Compliance</div></div></div>
+      <div class="det-stat-box"><div class="ds-icon">📅</div><div><div class="ds-num">Auto</div><div class="ds-label">Monthly Payslips</div></div></div>
+      <div class="det-stat-box"><div class="ds-icon">🔗</div><div><div class="ds-num">Linked</div><div class="ds-label">With Attendance</div></div></div>
+    </div>
+  </div>
+  <div class="detail-sections">
+    <div class="det-section-grid">
+      <div class="det-section-card">
+        <h3>💼 Payroll Features</h3>
+        <ul class="feat-list">
+          <li>Auto salary computation from attendance data</li>
+          <li>Configurable components (HRA, DA, TA, etc.)</li>
+          <li>PF, ESI, PT, and TDS deductions automated</li>
+          <li>One-click monthly payslip generation &amp; email</li>
+          <li>Bank transfer file export (NEFT/RTGS format)</li>
+          <li>Arrears, advance, and loan management</li>
+          <li>Annual Form 16 generation</li>
+        </ul>
+      </div>
+      <div class="det-section-card">
+        <h3>🧑‍💼 HR Management</h3>
+        <ul class="feat-list">
+          <li>Employee lifecycle from joining to exit</li>
+          <li>Leave policy configuration (CL, SL, EL)</li>
+          <li>Leave application &amp; approval via mobile</li>
+          <li>Document management (letters, contracts)</li>
+          <li>Performance appraisal &amp; increment tracking</li>
+          <li>Org chart and department hierarchy</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ═══ ACCOUNTING DETAIL ═══ -->
+<div id="page-accounting" class="page">
+<div class="detail-page">
+  <div class="breadcrumb">
+    <span onclick="showPage('home')">🏠 Home</span><span class="sep">/</span>
+    <span onclick="showPage('home')">Products</span><span class="sep">/</span>
+    <span class="current">Accounting &amp; Inventory</span>
+  </div>
+  <div class="detail-hero">
+    <div>
+      <div class="detail-hero-icon" style="background:linear-gradient(135deg,rgba(26,82,118,.3),rgba(20,143,119,.2))">📊</div>
+      <div class="det-cat">Software · Finance</div>
+      <h1>Accounting &amp; Inventory</h1>
+      <p>A robust financial management and inventory control system designed for educational institutions. Handles fee collection, general ledger, stock management, and GST-compliant billing in one integrated platform.</p>
+      <div class="det-price-row">
+        <div class="det-price">&#8377;10,000 <span>/ year</span></div>
+        <button class="btn-det-add" id="acc-btn" onclick="detailAdd('acc-btn','Accounting & Inventory','📊','₹10,000')">+ Add to Cart</button>
+      </div>
+    </div>
+    <div class="det-side">
+      <div class="det-stat-box"><div class="ds-icon">📑</div><div><div class="ds-num">GST</div><div class="ds-label">Compliant Invoicing</div></div></div>
+      <div class="det-stat-box"><div class="ds-icon">📦</div><div><div class="ds-num">Real-time</div><div class="ds-label">Inventory Tracking</div></div></div>
+      <div class="det-stat-box"><div class="ds-icon">💳</div><div><div class="ds-num">Online</div><div class="ds-label">Payment Gateway</div></div></div>
+      <div class="det-stat-box"><div class="ds-icon">📈</div><div><div class="ds-num">P&amp;L</div><div class="ds-label">Financial Reports</div></div></div>
+    </div>
+  </div>
+  <div class="detail-sections">
+    <div class="det-section-grid">
+      <div class="det-section-card">
+        <h3>🏦 Accounting Features</h3>
+        <ul class="feat-list">
+          <li>Double-entry general ledger system</li>
+          <li>Automated fee collection with online gateway</li>
+          <li>Concession and scholarship management</li>
+          <li>Outstanding dues tracking &amp; reminders</li>
+          <li>Budget planning and expense tracking</li>
+          <li>Balance sheet, P&amp;L, and trial balance reports</li>
+          <li>Multi-currency for international campuses</li>
+        </ul>
+      </div>
+      <div class="det-section-card">
+        <h3>📦 Inventory Features</h3>
+        <ul class="feat-list">
+          <li>Stationery, lab equipment, furniture tracking</li>
+          <li>Purchase order and vendor management</li>
+          <li>Stock movement and audit trails</li>
+          <li>Reorder alerts below threshold</li>
+          <li>Asset depreciation calculations</li>
+          <li>Barcode scanning for item check-in/out</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ═══ BGV DETAIL ═══ -->
+<div id="page-bgv" class="page">
+<div class="detail-page">
+  <div class="breadcrumb">
+    <span onclick="showPage('home')">🏠 Home</span><span class="sep">/</span>
+    <span onclick="showPage('home')">Products</span><span class="sep">/</span>
+    <span class="current">Background Verification Software</span>
+  </div>
+  <div class="detail-hero">
+    <div>
+      <div class="detail-hero-icon" style="background:linear-gradient(135deg,rgba(120,66,18,.3),rgba(202,111,30,.2))">🔍</div>
+      <div class="det-cat">Software · Verification</div>
+      <h1>Background Verification Software</h1>
+      <p>A smart, automated background verification and credential screening platform for educational institutions. Verify teachers, staff, and students at scale — reducing manual effort by 90% and ensuring campus safety and compliance from day one.</p>
+      <div class="det-price-row">
+        <div class="det-price">&#8377;8,000 <span>/ year</span></div>
+        <button class="btn-det-add" id="bgv-btn" onclick="detailAdd('bgv-btn','BGV Software','🔍','₹8,000')">+ Add to Cart</button>
+      </div>
+    </div>
+    <div class="det-side">
+      <div class="det-stat-box"><div class="ds-icon">⚡</div><div><div class="ds-num">90%</div><div class="ds-label">Faster Verification</div></div></div>
+      <div class="det-stat-box"><div class="ds-icon">🔗</div><div><div class="ds-num">API</div><div class="ds-label">Third-party Integration</div></div></div>
+      <div class="det-stat-box"><div class="ds-icon">📜</div><div><div class="ds-num">Digital</div><div class="ds-label">Report Generation</div></div></div>
+      <div class="det-stat-box"><div class="ds-icon">🛡️</div><div><div class="ds-num">ISO</div><div class="ds-label">27001 Data Handling</div></div></div>
+    </div>
+  </div>
+  <div class="detail-sections">
+    <div class="det-section-grid">
+      <div class="det-section-card">
+        <h3>🔎 Verification Checks</h3>
+        <ul class="feat-list">
+          <li>Identity verification (Aadhaar, PAN, Passport)</li>
+          <li>Educational qualification verification</li>
+          <li>Previous employment history check</li>
+          <li>Criminal record and court case search</li>
+          <li>Address verification (current &amp; permanent)</li>
+          <li>Automated reference check questionnaires</li>
+          <li>Social media &amp; digital footprint screening</li>
+        </ul>
+      </div>
+      <div class="det-section-card">
+        <h3>🗂️ Platform Features</h3>
+        <ul class="feat-list">
+          <li>Bulk candidate upload via Excel or API</li>
+          <li>Real-time status dashboard for HR teams</li>
+          <li>Candidate self-submission portal</li>
+          <li>Automated email reminders to candidates</li>
+          <li>Color-coded risk assessment (Green/Amber/Red)</li>
+          <li>PDF report with digital signature</li>
+          <li>Audit trail for compliance purposes</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+
+<!-- CART SIDEBAR -->
+<div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
+<div class="cart-sidebar" id="cartSidebar">
+  <div class="cart-head">
+    <h2>🛒 Your Cart</h2>
+    <button class="close-cart" onclick="toggleCart()">✕</button>
+  </div>
+  <div class="cart-items" id="cartItems">
+    <div class="cart-empty" id="cartEmpty">
+      <div class="empty-icon">🛒</div>
+      <p>Your cart is empty.<br>Add products to get started!</p>
+    </div>
+  </div>
+  <div class="cart-footer" id="cartFooter" style="display:none;">
+    <div class="cart-total"><span>Total</span><span id="cartTotal">₹0</span></div>
+    <button class="btn-checkout" onclick="openBooking()">Proceed to Book →</button>
+  </div>
+</div>
+
+<!-- BOOKING MODAL -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <div id="formView">
+      <h2>📋 Book Your Order</h2>
+      <p class="modal-sub">Fill in your details and our team will contact you within 24 hours.</p>
+      <div class="form-row">
+        <div class="form-group"><label>First Name</label><input type="text" placeholder="Rahul" id="firstName"></div>
+        <div class="form-group"><label>Last Name</label><input type="text" placeholder="Sharma" id="lastName"></div>
+      </div>
+      <div class="form-group"><label>Institution / Organization</label><input type="text" placeholder="ABC International School" id="institution"></div>
+      <div class="form-row">
+        <div class="form-group"><label>Email Address</label><input type="email" placeholder="rahul@school.edu" id="email"></div>
+        <div class="form-group"><label>Phone Number</label><input type="tel" placeholder="+91 98765 43210" id="phone"></div>
+      </div>
+      <div class="form-group">
+        <label>City / Location</label>
+        <select id="city">
+          <option value="">Select City</option>
+          <option>Delhi</option><option>Hyderabad</option><option>Mumbai</option>
+          <option>Bengaluru</option><option>Chennai</option><option>Other India</option>
+          <option>Dubai</option><option>Saudi Arabia (KSA)</option><option>Other International</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Products in Cart</label>
+        <div id="cartSummaryInModal" style="background:var(--dark3);border:1px solid var(--border);border-radius:12px;padding:12px 16px;font-size:.85rem;color:var(--text-muted)"></div>
+      </div>
+      <div class="form-group"><label>Additional Requirements</label><textarea placeholder="Describe your campus size, number of students, special requirements..." id="requirements"></textarea></div>
+      <button class="btn-submit" onclick="submitBooking()">✓ Confirm Booking Request</button>
+      <button class="btn-cancel-modal" onclick="closeModal()">Cancel</button>
+    </div>
+    <div id="successView" class="success-screen" style="display:none;">
+      <div class="success-icon">✓</div>
+      <h2>Booking Confirmed!</h2>
+      <p>Thank you! Our team will reach out within <strong>24 hours</strong> to discuss your requirements and provide a customized quote.</p>
+      <p style="font-size:.85rem;color:var(--green-light);margin-bottom:28px;">📞 +91-90324 06513</p>
+      <button class="btn-submit" onclick="closeModalAndReset()" style="max-width:280px;margin:0 auto;display:block">Back to Shopping</button>
+    </div>
+  </div>
+</div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+let cart = [];
+
+function hideIntroLoader() {
+  const overlay = document.getElementById('introLoader');
+  const v = document.getElementById('introLoaderVideo');
+  if (!overlay) return;
+  overlay.classList.add('hidden');
+  setTimeout(() => {
+    overlay.remove();
+    try { if (v) v.pause(); } catch {}
+  }, 450);
+}
+
+// Intro loader video (autoplay muted at 2x)
+window.addEventListener('DOMContentLoaded', () => {
+  const overlay = document.getElementById('introLoader');
+  const v = document.getElementById('introLoaderVideo');
+  if (!overlay || !v) return;
+
+  v.muted = true;
+  v.defaultMuted = true;
+  v.playbackRate = 2.0;
+
+  const p = v.play();
+  if (p && typeof p.catch === 'function') p.catch(() => {});
+
+  v.addEventListener('ended', hideIntroLoader, { once: true });
+  v.addEventListener('error', hideIntroLoader, { once: true });
+
+  // Safety: never block the page longer than 8s.
+  setTimeout(() => {
+    if (document.getElementById('introLoader')) hideIntroLoader();
+  }, 8000);
+});
+
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  window.scrollTo({ top:0, behavior:'smooth' });
+}
+
+function filterProducts(cat, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.product-card').forEach(card => {
+    if (cat === 'all' || card.dataset.category === cat) card.classList.remove('hidden');
+    else card.classList.add('hidden');
+  });
+}
+
+function toggleCart() {
+  document.getElementById('cartOverlay').classList.toggle('open');
+  document.getElementById('cartSidebar').classList.toggle('open');
+}
+
+function addToCart(btn, name, icon, price) {
+  const ex = cart.find(i => i.name === name);
+  if (ex) ex.qty++;
+  else cart.push({ name, icon, price, qty:1 });
+  if (btn) {
+    const orig = btn.textContent;
+    btn.textContent = '✓ Added';
+    btn.classList.add('added');
+    setTimeout(() => { btn.textContent = orig; btn.classList.remove('added'); }, 1500);
+  }
+  updateCart();
+}
+
+function getStepper(name) {
+  const sid = name.replace(/ /g,'_').replace(/&/g,'and');
+  return {
+    btn: document.getElementById('addbtn-' + sid),
+    stepper: document.getElementById('stepper-' + sid),
+    numEl: document.querySelector('#stepper-' + sid + ' .cs-num')
+  };
+}
+
+function cardAdd(btn, name, icon, price) {
+  const ex = cart.find(i => i.name === name);
+  if (ex) ex.qty++;
+  else cart.push({ name, icon, price, qty: 1 });
+  const { stepper, numEl } = getStepper(name);
+  if (btn) { btn.style.display = 'none'; }
+  if (stepper) { stepper.classList.add('visible'); }
+  if (numEl) { numEl.textContent = cart.find(i=>i.name===name).qty; }
+  updateCart();
+}
+
+function cardInc(btn, name, icon, price) {
+  const ex = cart.find(i => i.name === name);
+  if (ex) ex.qty++;
+  else cart.push({ name, icon, price, qty: 1 });
+  const { numEl } = getStepper(name);
+  if (numEl) numEl.textContent = cart.find(i=>i.name===name).qty;
+  updateCart();
+}
+
+function cardDec(btn, name, icon, price) {
+  const ex = cart.find(i => i.name === name);
+  if (!ex) return;
+  ex.qty--;
+  if (ex.qty <= 0) {
+    cart.splice(cart.indexOf(ex), 1);
+    const { btn: addBtn, stepper } = getStepper(name);
+    if (addBtn) addBtn.style.display = '';
+    if (stepper) stepper.classList.remove('visible');
+  } else {
+    const { numEl } = getStepper(name);
+    if (numEl) numEl.textContent = ex.qty;
+  }
+  updateCart();
+}
+
+function detailAdd(btnId, name, icon, price) {
+  const btn = document.getElementById(btnId);
+  const ex = cart.find(i => i.name === name);
+  if (ex) ex.qty++;
+  else cart.push({ name, icon, price, qty:1 });
+  if (btn) {
+    btn.textContent = '✓ Added to Cart';
+    btn.classList.add('added');
+    setTimeout(() => { btn.textContent = '+ Add to Cart'; btn.classList.remove('added'); }, 2000);
+  }
+  updateCart();
+}
+
+function updateCart() {
+  const badge = document.getElementById('cartBadge');
+  badge.textContent = cart.reduce((s,i) => s+i.qty, 0);
+  const itemsEl = document.getElementById('cartItems');
+  const footerEl = document.getElementById('cartFooter');
+  const emptyEl = document.getElementById('cartEmpty');
+  document.querySelectorAll('.cart-item').forEach(e => e.remove());
+  if (!cart.length) { emptyEl.style.display='block'; footerEl.style.display='none'; return; }
+  emptyEl.style.display='none'; footerEl.style.display='block';
+  let total = 0;
+  cart.forEach((item, idx) => {
+    const n = parseInt(item.price.replace(/[^0-9]/g,'')) || 0;
+    total += n * item.qty;
+    const d = document.createElement('div');
+    d.className = 'cart-item';
+    d.innerHTML = `<div class="ci-icon">${item.icon}</div>
+      <div class="ci-info"><div class="ci-name">${item.name}</div><div class="ci-price">${item.price}</div></div>
+      <div class="ci-qty">
+        <button class="qty-btn" onclick="changeQty(${idx},-1)">−</button>
+        <span class="qty-num">${item.qty}</span>
+        <button class="qty-btn" onclick="changeQty(${idx},1)">+</button>
+      </div>`;
+    itemsEl.insertBefore(d, emptyEl);
+  });
+  document.getElementById('cartTotal').textContent = total > 0 ? '₹' + total.toLocaleString('en-IN') : 'Custom Quote';
+}
+
+function changeQty(idx, delta) {
+  cart[idx].qty += delta;
+  if (cart[idx].qty <= 0) cart.splice(idx,1);
+  updateCart();
+}
+
+function openBooking() {
+  toggleCart();
+  document.getElementById('cartSummaryInModal').textContent = cart.map(i=>`${i.icon} ${i.name} ×${i.qty}`).join(', ') || 'No items';
+  document.getElementById('modalOverlay').classList.add('open');
+}
+function closeModal() { document.getElementById('modalOverlay').classList.remove('open'); }
+
+function submitBooking() {
+  if (!document.getElementById('firstName').value || !document.getElementById('email').value || !document.getElementById('phone').value) {
+    alert('Please fill in Name, Email, and Phone'); return;
+  }
+  document.getElementById('formView').style.display = 'none';
+  document.getElementById('successView').style.display = 'block';
+}
+
+function closeModalAndReset() {
+  closeModal(); cart = []; updateCart();
+  document.getElementById('formView').style.display = 'block';
+  document.getElementById('successView').style.display = 'none';
+  ['firstName','lastName','institution','email','phone','requirements'].forEach(id => document.getElementById(id).value='');
+}
+
+document.querySelectorAll('.product-card').forEach((card,i) => { card.style.animationDelay = (i*.06)+'s'; });
+</script>
+</body>
+</html>
