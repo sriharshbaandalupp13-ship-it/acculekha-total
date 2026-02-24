@@ -5,3 +5,6 @@ node_modules
 dist
 coverage
 *.log
+
+prisma/*.db
+prisma/*.db-journal
