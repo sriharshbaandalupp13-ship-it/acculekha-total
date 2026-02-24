@@ -34,6 +34,109 @@ type ProductLike = Partial<Product> & {
 
 type CartLine = { productId: string; qty: number };
 
+const localFallbackProducts: Product[] = [
+  {
+    id: "local-software-1",
+    slug: "attendance-management-system",
+    name: "Attendance Management System",
+    cat: "software",
+    description: "Cloud attendance with GEO tracking, mobile app and alerts.",
+    unit: "year",
+    price: 15000,
+    origPrice: 18000,
+    gstRate: 18,
+    inStock: true,
+    enabled: true,
+    isNew: false,
+    offer: "17% OFF - Launch Offer",
+    image1: null,
+    image2: null,
+    image3: null,
+    image4: null,
+    videoUrl: null
+  },
+  {
+    id: "local-hardware-1",
+    slug: "ai-facial-recognition-biometric",
+    name: "AI Facial Recognition Biometric",
+    cat: "hardware",
+    description: "Face + RF + PIN access with instant alerts.",
+    unit: "unit",
+    price: 45000,
+    origPrice: 52000,
+    gstRate: 18,
+    inStock: true,
+    enabled: true,
+    isNew: true,
+    offer: "13% OFF",
+    image1: null,
+    image2: null,
+    image3: null,
+    image4: null,
+    videoUrl: null
+  },
+  {
+    id: "local-iot-1",
+    slug: "smart-campus-iot-hub",
+    name: "Smart Campus IoT Hub",
+    cat: "iot",
+    description: "Central IoT hub for campus automation and dashboards.",
+    unit: "site",
+    price: 35000,
+    origPrice: 40000,
+    gstRate: 18,
+    inStock: true,
+    enabled: true,
+    isNew: true,
+    offer: "12% OFF",
+    image1: null,
+    image2: null,
+    image3: null,
+    image4: null,
+    videoUrl: null
+  },
+  {
+    id: "local-service-1",
+    slug: "annual-maintenance-contract",
+    name: "Annual Maintenance Contract",
+    cat: "service",
+    description: "Priority support with preventive maintenance.",
+    unit: "device/year",
+    price: 5000,
+    origPrice: null,
+    gstRate: 18,
+    inStock: true,
+    enabled: true,
+    isNew: false,
+    offer: null,
+    image1: null,
+    image2: null,
+    image3: null,
+    image4: null,
+    videoUrl: null
+  },
+  {
+    id: "local-bundle-1",
+    slug: "campus-starter-pack",
+    name: "Campus Starter Pack",
+    cat: "bundle",
+    description: "Attendance + Fee + Payroll + 1 Biometric device.",
+    unit: "year",
+    price: 45000,
+    origPrice: 60000,
+    gstRate: 18,
+    inStock: true,
+    enabled: true,
+    isNew: true,
+    offer: "Save 25%",
+    image1: null,
+    image2: null,
+    image3: null,
+    image4: null,
+    videoUrl: null
+  }
+];
+
 declare global {
   interface Window {
     Razorpay?: new (options: Record<string, unknown>) => { open: () => void };
@@ -62,29 +165,34 @@ export default function CatalogueApp() {
   }, []);
 
   async function load() {
-    const res = await fetch("/api/products", { cache: "no-store" });
-    const data = (await res.json()) as ProductLike[];
-    const normalized = data.map((p, i) => ({
-      id: String(p.id ?? p.slug ?? `local-${i}`),
-      name: String(p.name ?? "Unnamed Product"),
-      slug: String(p.slug ?? `product-${i}`),
-      cat: String(p.cat ?? "software"),
-      description: String(p.description ?? ""),
-      unit: String(p.unit ?? "unit"),
-      price: Number.isFinite(p.price) ? Number(p.price) : 0,
-      origPrice: p.origPrice == null ? null : Number(p.origPrice),
-      gstRate: Number.isFinite(p.gstRate) ? Number(p.gstRate) : 18,
-      inStock: Boolean(p.inStock ?? true),
-      enabled: Boolean(p.enabled ?? true),
-      isNew: Boolean(p.isNew ?? false),
-      offer: p.offer ?? null,
-      image1: p.image1 ?? null,
-      image2: p.image2 ?? null,
-      image3: p.image3 ?? null,
-      image4: p.image4 ?? null,
-      videoUrl: p.videoUrl ?? null
-    })) satisfies Product[];
-    setProducts(normalized);
+    try {
+      const res = await fetch("/api/products", { cache: "no-store" });
+      if (!res.ok) throw new Error("products endpoint failed");
+      const data = (await res.json()) as ProductLike[];
+      const normalized = data.map((p, i) => ({
+        id: String(p.id ?? p.slug ?? `local-${i}`),
+        name: String(p.name ?? "Unnamed Product"),
+        slug: String(p.slug ?? `product-${i}`),
+        cat: String(p.cat ?? "software"),
+        description: String(p.description ?? ""),
+        unit: String(p.unit ?? "unit"),
+        price: Number.isFinite(p.price) ? Number(p.price) : 0,
+        origPrice: p.origPrice == null ? null : Number(p.origPrice),
+        gstRate: Number.isFinite(p.gstRate) ? Number(p.gstRate) : 18,
+        inStock: Boolean(p.inStock ?? true),
+        enabled: Boolean(p.enabled ?? true),
+        isNew: Boolean(p.isNew ?? false),
+        offer: p.offer ?? null,
+        image1: p.image1 ?? null,
+        image2: p.image2 ?? null,
+        image3: p.image3 ?? null,
+        image4: p.image4 ?? null,
+        videoUrl: p.videoUrl ?? null
+      })) satisfies Product[];
+      setProducts(normalized);
+    } catch {
+      setProducts(localFallbackProducts);
+    }
   }
 
   const visible = useMemo(

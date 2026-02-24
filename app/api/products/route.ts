@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { db } from "@/lib/db";
-import { ensureBootstrap } from "@/lib/bootstrap";
 import { requireAdmin } from "@/lib/auth";
 import { defaultProducts } from "@/lib/default-products";
 
@@ -27,6 +25,10 @@ const productSchema = z.object({
 
 export async function GET() {
   try {
+    const [{ db }, { ensureBootstrap }] = await Promise.all([
+      import("@/lib/db"),
+      import("@/lib/bootstrap")
+    ]);
     await ensureBootstrap();
     const products = await db.product.findMany({ orderBy: { createdAt: "asc" } });
     return NextResponse.json(products);
@@ -39,6 +41,7 @@ export async function POST(req: NextRequest) {
   if (!(await requireAdmin())) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+  const { db } = await import("@/lib/db");
   const body = await req.json();
   const parsed = productSchema.safeParse(body);
   if (!parsed.success) {
