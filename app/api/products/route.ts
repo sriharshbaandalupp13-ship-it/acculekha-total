@@ -3,6 +3,7 @@ import { z } from "zod";
 import { db } from "@/lib/db";
 import { ensureBootstrap } from "@/lib/bootstrap";
 import { requireAdmin } from "@/lib/auth";
+import { defaultProducts } from "@/lib/default-products";
 
 const productSchema = z.object({
   slug: z.string().min(2),
@@ -25,9 +26,13 @@ const productSchema = z.object({
 });
 
 export async function GET() {
-  await ensureBootstrap();
-  const products = await db.product.findMany({ orderBy: { createdAt: "asc" } });
-  return NextResponse.json(products);
+  try {
+    await ensureBootstrap();
+    const products = await db.product.findMany({ orderBy: { createdAt: "asc" } });
+    return NextResponse.json(products);
+  } catch {
+    return NextResponse.json(defaultProducts);
+  }
 }
 
 export async function POST(req: NextRequest) {

@@ -23,6 +23,15 @@ type Product = {
   videoUrl: string | null;
 };
 
+type ProductLike = Partial<Product> & {
+  name?: string;
+  slug?: string;
+  cat?: string;
+  description?: string;
+  unit?: string;
+  price?: number;
+};
+
 type CartLine = { productId: string; qty: number };
 
 declare global {
@@ -54,8 +63,28 @@ export default function CatalogueApp() {
 
   async function load() {
     const res = await fetch("/api/products", { cache: "no-store" });
-    const data = await res.json();
-    setProducts(data);
+    const data = (await res.json()) as ProductLike[];
+    const normalized = data.map((p, i) => ({
+      id: String(p.id ?? p.slug ?? `local-${i}`),
+      name: String(p.name ?? "Unnamed Product"),
+      slug: String(p.slug ?? `product-${i}`),
+      cat: String(p.cat ?? "software"),
+      description: String(p.description ?? ""),
+      unit: String(p.unit ?? "unit"),
+      price: Number.isFinite(p.price) ? Number(p.price) : 0,
+      origPrice: p.origPrice == null ? null : Number(p.origPrice),
+      gstRate: Number.isFinite(p.gstRate) ? Number(p.gstRate) : 18,
+      inStock: Boolean(p.inStock ?? true),
+      enabled: Boolean(p.enabled ?? true),
+      isNew: Boolean(p.isNew ?? false),
+      offer: p.offer ?? null,
+      image1: p.image1 ?? null,
+      image2: p.image2 ?? null,
+      image3: p.image3 ?? null,
+      image4: p.image4 ?? null,
+      videoUrl: p.videoUrl ?? null
+    })) satisfies Product[];
+    setProducts(normalized);
   }
 
   const visible = useMemo(
@@ -231,8 +260,8 @@ export default function CatalogueApp() {
         ) : null}
 
         <div className="row">
-          {visible.map((p) => (
-            <div key={p.id} className="card" style={{ width: "min(360px, 100%)", flex: "1 1 320px" }}>
+          {visible.map((p, i) => (
+            <div key={`${p.id}-${p.slug}-${i}`} className="card" style={{ width: "min(360px, 100%)", flex: "1 1 320px" }}>
               <div className="muted" style={{ fontSize: 12 }}>{p.cat.toUpperCase()}</div>
               <h3 style={{ marginTop: 6, marginBottom: 6 }}>{p.name}</h3>
               <p className="muted" style={{ marginTop: 0 }}>{p.description}</p>
