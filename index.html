@@ -712,6 +712,7 @@ select.form-inp { cursor: pointer; }
           🛒 Cart <div class="cart-badge" id="cartBadge">0</div>
         </button>
         <button class="btn-login" onclick="openLoginModal()" id="loginBtn">Login</button>
+        <button class="btn-login" onclick="openSignupModal()" id="signupBtn">Sign Up</button>
       </div>
     </div>
   </div>
@@ -731,6 +732,7 @@ select.form-inp { cursor: pointer; }
       <button class="filter-btn" onclick="filterCat('iot',this)">📡 IoT</button>
       <button class="filter-btn" onclick="filterCat('service',this)">🤝 Services</button>
       <button class="filter-btn" onclick="filterCat('bundle',this)">📦 Bundles</button>
+      <button class="filter-btn" onclick="filterCat('outofstock',this)">🚫 Out of Stock</button>
     </div>
   </div>
 </div>
@@ -948,12 +950,13 @@ select.form-inp { cursor: pointer; }
           <label class="form-label">Mobile *</label>
           <div class="otp-row">
             <input class="form-inp" id="phone" placeholder="+91 XXXXX XXXXX" type="tel">
-            <button class="btn-otp" id="otpBtn" onclick="sendOTP()">Get OTP</button>
+            <button class="btn-otp" id="otpBtn" type="button" onclick="sendOTP()">Get OTP</button>
           </div>
         </div>
         <div class="col-12" id="otpField" style="display:none">
           <label class="form-label">Enter OTP *</label>
           <input class="form-inp" id="otpInput" placeholder="6-digit OTP" maxlength="6">
+          <div id="checkoutOtpHint" style="display:none;font-size:.74rem;color:var(--text-muted);margin-top:6px;"></div>
         </div>
         <div class="col-12">
           <label class="form-label">Delivery Address *</label>
@@ -1470,6 +1473,7 @@ function renderAllProducts() {
     const col = document.createElement('div');
     col.className = 'col-12 col-sm-6 col-lg-4 product-card-wrap';
     col.dataset.category = p.cat;
+    col.dataset.stock = p.inStock ? 'in' : 'out';
     col.dataset.search = (p.name + ' ' + p.desc + ' ' + p.tags.join(' ')).toLowerCase();
     col.innerHTML = `
       <div class="product-card h-100 ${!p.enabled ? 'opacity-50' : ''}" onclick="openDetail('${p.id}')">
@@ -1644,8 +1648,11 @@ function filterCat(cat, btn) {
   const mainGrid = document.getElementById('product-grid');
   if (mainGrid) mainGrid.style.display = '';
   document.querySelectorAll('.product-card-wrap').forEach(card => {
-    if (cat === 'all' || card.dataset.category === cat) card.style.display = '';
-    else card.style.display = 'none';
+    const show =
+      cat === 'all' ||
+      card.dataset.category === cat ||
+      (cat === 'outofstock' && card.dataset.stock === 'out');
+    card.style.display = show ? '' : 'none';
   });
 }
 
@@ -1874,6 +1881,19 @@ function closeCheckout() {
   document.getElementById('checkoutModal').classList.remove('open');
   document.getElementById('checkoutForm').style.display = 'block';
   document.getElementById('orderSuccess').style.display = 'none';
+  document.getElementById('otpField').style.display = 'none';
+  document.getElementById('otpInput').value = '';
+  const otpHint = document.getElementById('checkoutOtpHint');
+  if (otpHint) {
+    otpHint.style.display = 'none';
+    otpHint.textContent = '';
+  }
+  const otpBtn = document.getElementById('otpBtn');
+  if (otpBtn) {
+    otpBtn.textContent = 'Get OTP';
+    otpBtn.classList.remove('sent');
+  }
+  mockOTP = '';
   cart = []; updateCart();
   document.querySelectorAll('.product-card-wrap').forEach(wrap => {
     const addBtn = wrap.querySelector('.btn-add-card');
@@ -1927,9 +1947,14 @@ function sendOTP() {
   if (!phone || phone.length < 10) { alert('Enter valid mobile number'); return; }
   mockOTP = Math.floor(100000 + Math.random() * 900000).toString();
   document.getElementById('otpField').style.display = 'block';
+  document.getElementById('otpInput').value = mockOTP;
   const btn = document.getElementById('otpBtn');
   btn.textContent = 'Resend'; btn.classList.add('sent');
-  alert(`📱 OTP sent to ${phone}\n\n[DEMO] Your OTP is: ${mockOTP}`);
+  const hint = document.getElementById('checkoutOtpHint');
+  if (hint) {
+    hint.style.display = 'block';
+    hint.textContent = `Demo OTP: ${mockOTP}. Enter this OTP to place order.`;
+  }
 }
 
 function placeOrder() {
@@ -1985,6 +2010,11 @@ function placeOrder() {
 function openLoginModal() {
   const userTab = document.querySelector('.login-tab[data-mode="user"]');
   setLoginMode('user', userTab);
+  document.getElementById('loginModal').classList.add('open');
+}
+function openSignupModal() {
+  const signupTab = document.querySelector('.login-tab[data-mode="signup"]');
+  setLoginMode('signup', signupTab);
   document.getElementById('loginModal').classList.add('open');
 }
 function closeLoginModal() { document.getElementById('loginModal').classList.remove('open'); }
