@@ -1021,8 +1021,9 @@ select.form-inp { cursor: pointer; }
       <button class="close-cart" onclick="closeLoginModal()">✕</button>
     </div>
     <div class="login-tabs">
-      <button class="login-tab active" onclick="setLoginMode('user',this)">👤 Customer</button>
-      <button class="login-tab" onclick="setLoginMode('admin',this)">🛡️ Admin</button>
+      <button class="login-tab active" data-mode="user" onclick="setLoginMode('user',this)">Login</button>
+      <button class="login-tab" data-mode="admin" onclick="setLoginMode('admin',this)">Admin</button>
+      <button class="login-tab" data-mode="signup" onclick="setLoginMode('signup',this)">Sign Up</button>
     </div>
     <div id="loginFormArea">
       <label class="form-label">Mobile Number</label>
@@ -1034,6 +1035,10 @@ select.form-inp { cursor: pointer; }
         <label class="form-label">Enter OTP</label>
         <input class="form-inp" id="loginOtp" placeholder="6-digit OTP" maxlength="6">
       </div>
+      <div id="loginOtpHint" style="display:none;font-size:.75rem;color:var(--text-muted);margin:6px 0 10px;"></div>
+      <label class="form-label">Password (for signed-up users)</label>
+      <input class="form-inp" id="loginPassword" placeholder="Enter password or use OTP" type="password">
+      <div style="font-size:.72rem;color:var(--text-muted);margin-top:6px;">Use password if you already signed up. If not, use OTP login.</div>
     </div>
     <div id="adminLoginArea" style="display:none;">
       <label class="form-label">Admin Username</label>
@@ -1041,7 +1046,20 @@ select.form-inp { cursor: pointer; }
       <label class="form-label">Password</label>
       <input class="form-inp" id="adminPass" placeholder="••••••••" type="password">
     </div>
-    <button class="btn-place" onclick="doLogin()">Login →</button>
+    <div id="signupArea" style="display:none;">
+      <label class="form-label">Full Name</label>
+      <input class="form-inp" id="signupName" placeholder="Your full name">
+      <label class="form-label">Mobile Number</label>
+      <input class="form-inp" id="signupPhone" placeholder="+91 XXXXX XXXXX" type="tel">
+      <label class="form-label">Email</label>
+      <input class="form-inp" id="signupEmail" placeholder="you@example.com" type="email">
+      <label class="form-label">Password</label>
+      <input class="form-inp" id="signupPassword" placeholder="Minimum 6 characters" type="password">
+      <label class="form-label">Confirm Password</label>
+      <input class="form-inp" id="signupConfirmPassword" placeholder="Re-enter password" type="password">
+      <button class="btn-place" onclick="doSignup()">Create Account →</button>
+    </div>
+    <button class="btn-place" id="loginSubmitBtn" onclick="doLogin()">Login →</button>
     <button class="btn-cancel-modal" onclick="closeLoginModal()">Cancel</button>
   </div>
 </div>
@@ -1345,7 +1363,38 @@ let mockOTP = '';
 let loginMockOTP = '';
 let orders = [];
 let inquiries = [];
+let userAccounts = [];
 const PRODUCT_STATE_KEY = 'acculekhaa_product_state_v1';
+const USER_ACCOUNTS_KEY = 'acculekhaa_user_accounts_v1';
+
+function normalizePhone(phone) {
+  return String(phone || '').replace(/\D/g, '');
+}
+
+function loadUserAccounts() {
+  try {
+    const raw = localStorage.getItem(USER_ACCOUNTS_KEY);
+    if (!raw) return;
+    const parsed = JSON.parse(raw);
+    userAccounts = Array.isArray(parsed) ? parsed : [];
+  } catch (err) {
+    userAccounts = [];
+    console.warn('Unable to load user accounts:', err);
+  }
+}
+
+function saveUserAccounts() {
+  try {
+    localStorage.setItem(USER_ACCOUNTS_KEY, JSON.stringify(userAccounts));
+  } catch (err) {
+    console.warn('Unable to save user accounts:', err);
+  }
+}
+
+function findUserByPhone(phone) {
+  const normalized = normalizePhone(phone);
+  return userAccounts.find(u => normalizePhone(u.phone) === normalized);
+}
 
 function persistProductState() {
   try {
@@ -1399,16 +1448,12 @@ function renderAllProducts() {
   const grids = { software:'product-grid', hardware:'product-grid', iot:'product-grid', service:'product-grid', bundle:'product-grid' };
   Object.values(grids).forEach(gid => document.getElementById(gid).innerHTML = '');
 
-  const orderedProducts = PRODUCTS
-    .map((p, originalIndex) => ({ p, originalIndex }))
-    .sort((a, b) => {
-      if (a.p.inStock !== b.p.inStock) return a.p.inStock ? -1 : 1;
-      return a.originalIndex - b.originalIndex;
-    })
-    .map(item => item.p);
+  const visibleProducts = PRODUCTS.filter(p => p.enabled || isAdmin);
+  const inStockProducts = visibleProducts.filter(p => p.inStock);
+  const outOfStockProducts = visibleProducts.filter(p => !p.inStock);
+  const orderedProducts = [...inStockProducts, ...outOfStockProducts];
 
   orderedProducts.forEach((p) => {
-    if (!p.enabled && !isAdmin) return;
     const gid = grids[p.cat] || 'product-grid';
     const grid = document.getElementById(gid);
     if (!grid) return;
@@ -1937,15 +1982,25 @@ function placeOrder() {
 }
 
 /* ─── LOGIN ─── */
-function openLoginModal() { document.getElementById('loginModal').classList.add('open'); }
+function openLoginModal() {
+  const userTab = document.querySelector('.login-tab[data-mode="user"]');
+  setLoginMode('user', userTab);
+  document.getElementById('loginModal').classList.add('open');
+}
 function closeLoginModal() { document.getElementById('loginModal').classList.remove('open'); }
 
 function setLoginMode(mode, btn) {
   loginMode = mode;
   document.querySelectorAll('.login-tab').forEach(t => t.classList.remove('active'));
-  btn.classList.add('active');
+  if (btn) btn.classList.add('active');
+  const loginSubmitBtn = document.getElementById('loginSubmitBtn');
   document.getElementById('loginFormArea').style.display = mode === 'user' ? 'block' : 'none';
   document.getElementById('adminLoginArea').style.display = mode === 'admin' ? 'block' : 'none';
+  document.getElementById('signupArea').style.display = mode === 'signup' ? 'block' : 'none';
+  if (loginSubmitBtn) {
+    loginSubmitBtn.style.display = mode === 'signup' ? 'none' : 'block';
+    loginSubmitBtn.textContent = mode === 'admin' ? 'Login as Admin →' : 'Login →';
+  }
 }
 
 function loginSendOTP() {
@@ -1953,7 +2008,55 @@ function loginSendOTP() {
   if (!phone) { alert('Enter mobile number'); return; }
   loginMockOTP = Math.floor(100000 + Math.random() * 900000).toString();
   document.getElementById('loginOtpRow').style.display = 'block';
-  alert(`📱 OTP: ${loginMockOTP} (Demo)`);
+  document.getElementById('loginOtp').value = loginMockOTP;
+  const hint = document.getElementById('loginOtpHint');
+  hint.style.display = 'block';
+  hint.textContent = `Demo OTP: ${loginMockOTP}. Use this to login now.`;
+}
+
+function doSignup() {
+  const name = document.getElementById('signupName').value.trim();
+  const phone = document.getElementById('signupPhone').value.trim();
+  const email = document.getElementById('signupEmail').value.trim();
+  const password = document.getElementById('signupPassword').value;
+  const confirmPassword = document.getElementById('signupConfirmPassword').value;
+  const normalizedPhone = normalizePhone(phone);
+
+  if (!name || !phone || !email || !password || !confirmPassword) {
+    alert('Please fill all sign up fields');
+    return;
+  }
+  if (normalizedPhone.length < 10) {
+    alert('Please enter a valid mobile number');
+    return;
+  }
+  if (password.length < 6) {
+    alert('Password must be at least 6 characters');
+    return;
+  }
+  if (password !== confirmPassword) {
+    alert('Passwords do not match');
+    return;
+  }
+  if (findUserByPhone(phone)) {
+    alert('An account with this mobile number already exists');
+    return;
+  }
+
+  userAccounts.push({
+    name,
+    phone,
+    email,
+    password,
+    createdAt: new Date().toISOString()
+  });
+  saveUserAccounts();
+
+  document.getElementById('loginPhone').value = phone;
+  document.getElementById('loginPassword').value = password;
+  const userTab = document.querySelector('.login-tab[data-mode="user"]');
+  setLoginMode('user', userTab);
+  alert('✅ Account created. You can now login with mobile + password.');
 }
 
 function doLogin() {
@@ -1963,7 +2066,6 @@ function doLogin() {
     if (u === 'aa@acculekhaa.com' && pw === 'aa') {
       isAdmin = true;
       document.getElementById('adminBar').classList.add('show');
-      document.getElementById('loginBtn').textContent = '🛡️ Admin';
       closeLoginModal();
       renderAllProducts();
       syncTopOffsets();
@@ -1972,13 +2074,28 @@ function doLogin() {
       alert('Invalid admin credentials. \nUsername: admin@acculekhaa.com\nPassword: Admin@123');
     }
   } else {
+    const phone = document.getElementById('loginPhone').value.trim();
+    const password = document.getElementById('loginPassword').value;
     const otp = document.getElementById('loginOtp').value.trim();
-    if (otp === loginMockOTP) {
-      currentUser = { phone: document.getElementById('loginPhone').value };
-      document.getElementById('loginBtn').textContent = '👤 ' + currentUser.phone.slice(-4);
+    if (!phone) { alert('Enter mobile number'); return; }
+
+    if (password) {
+      const account = findUserByPhone(phone);
+      if (!account || account.password !== password) {
+        alert('Invalid mobile number or password');
+        return;
+      }
+      currentUser = { phone: account.phone, name: account.name, email: account.email };
+      closeLoginModal();
+      alert(`✅ Logged in as ${account.name}`);
+      return;
+    }
+
+    if (otp && otp === loginMockOTP) {
+      currentUser = { phone };
       closeLoginModal();
     } else {
-      alert('Invalid OTP');
+      alert('Invalid OTP. Tap "Get OTP" again or login with password after Sign Up.');
     }
   }
 }
@@ -2192,6 +2309,7 @@ document.getElementById('galleryMain').addEventListener('touchstart', detailTouc
 document.getElementById('galleryMain').addEventListener('touchend', detailTouchEnd, { passive: true });
 
 /* ─── INIT ─── */
+loadUserAccounts();
 loadProductState();
 renderAllProducts();
 syncTopOffsets();
