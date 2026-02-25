@@ -1289,20 +1289,36 @@ let PRODUCTS = [
 
 const DEMO_MEDIA = {
   images: [
-    'https://picsum.photos/seed/accu-1/1000/700',
-    'https://picsum.photos/seed/accu-2/1000/700',
-    'https://picsum.photos/seed/accu-3/1000/700',
-    'https://picsum.photos/seed/accu-4/1000/700'
+    'Assets/0cbd8a8c46.webp',
+    'Assets/11-9d78 (1).webp',
+    'Assets/11-9d78.webp',
+    'Assets/14-a4ab.webp',
+    'Assets/2bd83b4470.webp',
+    'Assets/79cd5a81ae (1).webp',
+    'Assets/79cd5a81ae.webp',
+    'Assets/7e68e5abc8.webp',
+    'Assets/9c24bdde28.webp',
+    'Assets/ad0ca52469.webp',
+    'Assets/b8114f8abc.webp',
+    'Assets/c97f86bdbd.webp',
+    'Assets/fca57c42d9.webp'
   ],
   video: 'Assets/Video Project 2.mp4'
 };
 
+function hashSeed(str) {
+  let h = 2166136261;
+  for (let i = 0; i < str.length; i++) {
+    h ^= str.charCodeAt(i);
+    h += (h << 1) + (h << 4) + (h << 7) + (h << 8) + (h << 24);
+  }
+  return h >>> 0;
+}
+
 function getProductMedia(product) {
   const base = DEMO_MEDIA.images;
-  const images = Array.from({ length: 4 }, (_, i) => {
-    const custom = (product.images && typeof product.images[i] === 'string') ? product.images[i].trim() : '';
-    return custom || base[i % base.length];
-  });
+  const seed = hashSeed(String(product.id || product.name || 'product'));
+  const images = Array.from({ length: 4 }, (_, i) => base[(seed + i) % base.length]);
   const videoUrl = (typeof product.videoUrl === 'string' && product.videoUrl.trim()) ? product.videoUrl.trim() : DEMO_MEDIA.video;
   const items = images.map(src => ({ type: 'image', src }));
   if (videoUrl) items.push({ type: 'video', src: videoUrl });

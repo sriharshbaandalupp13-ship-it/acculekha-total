@@ -31,6 +31,9 @@ export async function GET() {
     ]);
     await ensureBootstrap();
     const products = await db.product.findMany({ orderBy: { createdAt: "asc" } });
+    if (!products.length) {
+      return NextResponse.json(defaultProducts);
+    }
     return NextResponse.json(products);
   } catch {
     return NextResponse.json(defaultProducts);
