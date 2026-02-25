@@ -1345,6 +1345,48 @@ let mockOTP = '';
 let loginMockOTP = '';
 let orders = [];
 let inquiries = [];
+const PRODUCT_STATE_KEY = 'acculekhaa_product_state_v1';
+
+function persistProductState() {
+  try {
+    const state = PRODUCTS.reduce((acc, p) => {
+      acc[p.id] = {
+        enabled: !!p.enabled,
+        inStock: !!p.inStock,
+        isNew: !!p.isNew,
+        offer: typeof p.offer === 'string' ? p.offer : '',
+        price: Number(p.price) || 0,
+        videoUrl: typeof p.videoUrl === 'string' ? p.videoUrl : '',
+        images: Array.isArray(p.images) ? p.images : []
+      };
+      return acc;
+    }, {});
+    localStorage.setItem(PRODUCT_STATE_KEY, JSON.stringify(state));
+  } catch (err) {
+    console.warn('Unable to save product state:', err);
+  }
+}
+
+function loadProductState() {
+  try {
+    const raw = localStorage.getItem(PRODUCT_STATE_KEY);
+    if (!raw) return;
+    const state = JSON.parse(raw);
+    PRODUCTS.forEach((p) => {
+      const saved = state?.[p.id];
+      if (!saved) return;
+      if ('enabled' in saved) p.enabled = !!saved.enabled;
+      if ('inStock' in saved) p.inStock = !!saved.inStock;
+      if ('isNew' in saved) p.isNew = !!saved.isNew;
+      if ('offer' in saved) p.offer = String(saved.offer || '');
+      if (Number.isFinite(Number(saved.price))) p.price = Number(saved.price);
+      if ('videoUrl' in saved) p.videoUrl = String(saved.videoUrl || '');
+      if (Array.isArray(saved.images)) p.images = saved.images.map(v => String(v || ''));
+    });
+  } catch (err) {
+    console.warn('Unable to load product state:', err);
+  }
+}
 
 /* ─── RENDER ALL PRODUCTS ─── */
 function renderAllProducts() {
@@ -1357,7 +1399,15 @@ function renderAllProducts() {
   const grids = { software:'product-grid', hardware:'product-grid', iot:'product-grid', service:'product-grid', bundle:'product-grid' };
   Object.values(grids).forEach(gid => document.getElementById(gid).innerHTML = '');
 
-  PRODUCTS.forEach((p, idx) => {
+  const orderedProducts = PRODUCTS
+    .map((p, originalIndex) => ({ p, originalIndex }))
+    .sort((a, b) => {
+      if (a.p.inStock !== b.p.inStock) return a.p.inStock ? -1 : 1;
+      return a.originalIndex - b.originalIndex;
+    })
+    .map(item => item.p);
+
+  orderedProducts.forEach((p) => {
     if (!p.enabled && !isAdmin) return;
     const gid = grids[p.cat] || 'product-grid';
     const grid = document.getElementById(gid);
@@ -2025,14 +2075,19 @@ function closeAdminPanel() {
   renderAllProducts();
 }
 
-function toggleProd(idx, field, val) { PRODUCTS[idx][field] = val; }
-function updatePrice(idx, val) { PRODUCTS[idx].price = parseInt(val) || PRODUCTS[idx].price; }
-function toggleSale(idx, val) { PRODUCTS[idx].offer = val ? (PRODUCTS[idx].offer || 'SALE') : ''; }
-function updateOffer(idx, val) { PRODUCTS[idx].offer = (val || '').trim(); }
-function updateVideoUrl(idx, val) { PRODUCTS[idx].videoUrl = (val || '').trim(); }
+function toggleProd(idx, field, val) {
+  PRODUCTS[idx][field] = val;
+  persistProductState();
+  if (field === 'inStock' || field === 'enabled' || field === 'isNew') renderAllProducts();
+}
+function updatePrice(idx, val) { PRODUCTS[idx].price = parseInt(val) || PRODUCTS[idx].price; persistProductState(); }
+function toggleSale(idx, val) { PRODUCTS[idx].offer = val ? (PRODUCTS[idx].offer || 'SALE') : ''; persistProductState(); }
+function updateOffer(idx, val) { PRODUCTS[idx].offer = (val || '').trim(); persistProductState(); }
+function updateVideoUrl(idx, val) { PRODUCTS[idx].videoUrl = (val || '').trim(); persistProductState(); }
 function updateImageUrl(idx, imageIndex, val) {
   if (!Array.isArray(PRODUCTS[idx].images)) PRODUCTS[idx].images = [];
   PRODUCTS[idx].images[imageIndex] = (val || '').trim();
+  persistProductState();
 }
 function toggleMediaEditor(idx) {
   const panel = document.getElementById('media-edit-' + idx);
@@ -2137,6 +2192,7 @@ document.getElementById('galleryMain').addEventListener('touchstart', detailTouc
 document.getElementById('galleryMain').addEventListener('touchend', detailTouchEnd, { passive: true });
 
 /* ─── INIT ─── */
+loadProductState();
 renderAllProducts();
 syncTopOffsets();
 window.addEventListener('resize', syncTopOffsets);
