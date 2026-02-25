@@ -3021,11 +3021,19 @@
 
     function closeDetail() { document.getElementById('detailModal').classList.remove('open'); }
 
-    function checkDelivery() {
+    async function checkDelivery() {
       const pin = document.getElementById('pincodeInput').value.trim();
-      if (pin.length !== 6) { document.getElementById('deliveryResult').textContent = 'Enter valid 6-digit pincode.'; return; }
-      const days = (parseInt(pin[0]) % 3) + 2;
-      document.getElementById('deliveryResult').textContent = `✅ Delivery in ${days}-${days + 1} business days via ShipRocket`;
+      const resultEl = document.getElementById('deliveryResult');
+      if (pin.length !== 6) { resultEl.textContent = 'Enter valid 6-digit pincode.'; return; }
+      resultEl.textContent = '⌛ Checking delivery...';
+      try {
+        const res = await fetch(`/api/shiprocket?pincode=${pin}`);
+        const data = await res.json();
+        resultEl.textContent = data.message || `✅ Delivery available`;
+      } catch (e) {
+        const days = (parseInt(pin[0]) % 3) + 2;
+        resultEl.textContent = `✅ Delivery in ${days}-${days + 1} business days via ShipRocket`;
+      }
     }
 
     /* ─── INQUIRY ─── */
@@ -3219,12 +3227,26 @@
       document.getElementById('adminLoginArea').style.display = mode === 'admin' ? 'block' : 'none';
     }
 
-    function loginSendOTP() {
+    async function loginSendOTP() {
       const phone = document.getElementById('loginPhone').value.trim();
-      if (!phone) { alert('Enter mobile number'); return; }
-      loginMockOTP = Math.floor(100000 + Math.random() * 900000).toString();
-      document.getElementById('loginOtpRow').style.display = 'block';
-      alert(`📱 OTP: ${loginMockOTP} (Demo)`);
+      if (!phone || phone.length < 10) { alert('Enter valid mobile number'); return; }
+      try {
+        const res = await fetch('/api/otp/send', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ phone })
+        });
+        const data = await res.json();
+        document.getElementById('loginOtpRow').style.display = 'block';
+        if (data.demoOtp) {
+          loginMockOTP = data.demoOtp;
+          alert(`📱 OTP sent\n\n[DEMO MODE] Your OTP is: ${data.demoOtp}`);
+        } else {
+          loginMockOTP = '__SMS__';
+          alert(`📱 OTP sent to ${phone} via SMS!`);
+        }
+      } catch (e) {
+        alert('Failed to send OTP. Try again.');
+      }
     }
 
     async function doLogin() {
