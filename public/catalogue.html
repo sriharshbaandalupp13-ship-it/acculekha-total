@@ -1966,6 +1966,7 @@
             🛒 Cart <div class="cart-badge" id="cartBadge">0</div>
           </button>
           <button class="btn-login" onclick="openLoginModal()" id="loginBtn">Login</button>
+          <button class="btn-login" onclick="openSignupModal()" id="signupBtn">Sign Up</button>
         </div>
       </div>
     </div>
@@ -1985,6 +1986,7 @@
         <button class="filter-btn" onclick="filterCat('iot',this)">📡 IoT</button>
         <button class="filter-btn" onclick="filterCat('service',this)">🤝 Services</button>
         <button class="filter-btn" onclick="filterCat('bundle',this)">📦 Bundles</button>
+        <button class="filter-btn" onclick="filterCat('outofstock',this)">🚫 Out of Stock</button>
       </div>
     </div>
   </div>
@@ -2216,12 +2218,13 @@
             <label class="form-label">Mobile *</label>
             <div class="otp-row">
               <input class="form-inp" id="phone" placeholder="+91 XXXXX XXXXX" type="tel">
-              <button class="btn-otp" id="otpBtn" onclick="sendOTP()">Get OTP</button>
+              <button class="btn-otp" id="otpBtn" type="button" onclick="sendOTP()">Get OTP</button>
             </div>
           </div>
           <div class="col-12" id="otpField" style="display:none">
             <label class="form-label">Enter OTP *</label>
             <input class="form-inp" id="otpInput" placeholder="6-digit OTP" maxlength="6">
+            <div id="checkoutOtpHint" style="display:none;font-size:.74rem;color:var(--text-muted);margin-top:6px;"></div>
           </div>
           <div class="col-12">
             <label class="form-label">Delivery Address *</label>
@@ -2302,19 +2305,23 @@
         <button class="close-cart" onclick="closeLoginModal()">✕</button>
       </div>
       <div class="login-tabs">
-        <button class="login-tab active" onclick="setLoginMode('user',this)">👤 Customer</button>
-        <button class="login-tab" onclick="setLoginMode('admin',this)">🛡️ Admin</button>
+        <button class="login-tab active" data-mode="user" onclick="setLoginMode('user',this)">Login</button>
+        <button class="login-tab" data-mode="admin" onclick="setLoginMode('admin',this)">Admin</button>
+        <button class="login-tab" data-mode="signup" onclick="setLoginMode('signup',this)">Sign Up</button>
       </div>
       <div id="loginFormArea">
         <label class="form-label">Mobile Number</label>
         <div class="otp-row mb-3">
           <input class="form-inp" id="loginPhone" placeholder="+91 XXXXX XXXXX" type="tel" style="margin:0;">
-          <button class="btn-otp" onclick="loginSendOTP()">Get OTP</button>
+          <button class="btn-otp" type="button" onclick="loginSendOTP()">Get OTP</button>
         </div>
         <div id="loginOtpRow" style="display:none;">
           <label class="form-label">Enter OTP</label>
           <input class="form-inp" id="loginOtp" placeholder="6-digit OTP" maxlength="6">
         </div>
+        <div id="loginOtpHint" style="display:none;font-size:.75rem;color:var(--text-muted);margin:6px 0 10px;"></div>
+        <label class="form-label">Password (for signed-up users)</label>
+        <input class="form-inp" id="loginPassword" placeholder="Enter password or use OTP" type="password">
       </div>
       <div id="adminLoginArea" style="display:none;">
         <label class="form-label">Admin Username</label>
@@ -2322,7 +2329,20 @@
         <label class="form-label">Password</label>
         <input class="form-inp" id="adminPass" placeholder="••••••••" type="password">
       </div>
-      <button class="btn-place" onclick="doLogin()">Login →</button>
+      <div id="signupArea" style="display:none;">
+        <label class="form-label">Full Name</label>
+        <input class="form-inp" id="signupName" placeholder="Your full name">
+        <label class="form-label">Mobile Number</label>
+        <input class="form-inp" id="signupPhone" placeholder="+91 XXXXX XXXXX" type="tel">
+        <label class="form-label">Email</label>
+        <input class="form-inp" id="signupEmail" placeholder="you@example.com" type="email">
+        <label class="form-label">Password</label>
+        <input class="form-inp" id="signupPassword" placeholder="Minimum 6 characters" type="password">
+        <label class="form-label">Confirm Password</label>
+        <input class="form-inp" id="signupConfirmPassword" placeholder="Re-enter password" type="password">
+        <button class="btn-place" type="button" onclick="doSignup()">Create Account →</button>
+      </div>
+      <button class="btn-place" id="loginSubmitBtn" type="button" onclick="doLogin()">Login →</button>
       <button class="btn-cancel-modal" onclick="closeLoginModal()">Cancel</button>
     </div>
   </div>
@@ -2628,6 +2648,34 @@
     let loginMockOTP = '';
     let orders = [];
     let inquiries = [];
+    let userAccounts = [];
+    const USER_ACCOUNTS_KEY = 'acculekhaa_user_accounts_v1';
+
+    function normalizePhone(phone) {
+      return String(phone || '').replace(/\D/g, '');
+    }
+
+    function loadUserAccounts() {
+      try {
+        const raw = localStorage.getItem(USER_ACCOUNTS_KEY);
+        if (!raw) return;
+        const parsed = JSON.parse(raw);
+        userAccounts = Array.isArray(parsed) ? parsed : [];
+      } catch (err) {
+        userAccounts = [];
+      }
+    }
+
+    function saveUserAccounts() {
+      try {
+        localStorage.setItem(USER_ACCOUNTS_KEY, JSON.stringify(userAccounts));
+      } catch (err) { }
+    }
+
+    function findUserByPhone(phone) {
+      const normalized = normalizePhone(phone);
+      return userAccounts.find(u => normalizePhone(u.phone) === normalized);
+    }
 
     /* ─── RENDER ALL PRODUCTS ─── */
     function renderAllProducts() {
@@ -2658,6 +2706,7 @@
         const col = document.createElement('div');
         col.className = 'col-12 col-sm-6 col-lg-4 product-card-wrap';
         col.dataset.category = p.cat;
+        col.dataset.stock = p.inStock ? 'in' : 'out';
         col.dataset.search = (p.name + ' ' + p.desc + ' ' + p.tags.join(' ')).toLowerCase();
         col.innerHTML = `
       <div class="product-card ${!p.enabled ? 'opacity-50' : ''}" onclick="openDetail('${p.id}')">
@@ -2832,8 +2881,11 @@
       const mainGrid = document.getElementById('product-grid');
       if (mainGrid) mainGrid.style.display = '';
       document.querySelectorAll('.product-card-wrap').forEach(card => {
-        if (cat === 'all' || card.dataset.category === cat) card.style.display = '';
-        else card.style.display = 'none';
+        const show =
+          cat === 'all' ||
+          card.dataset.category === cat ||
+          (cat === 'outofstock' && card.dataset.stock === 'out');
+        card.style.display = show ? '' : 'none';
       });
     }
 
@@ -3075,6 +3127,20 @@
       document.getElementById('checkoutModal').classList.remove('open');
       document.getElementById('checkoutForm').style.display = 'block';
       document.getElementById('orderSuccess').style.display = 'none';
+      document.getElementById('otpField').style.display = 'none';
+      document.getElementById('otpInput').value = '';
+      const otpHint = document.getElementById('checkoutOtpHint');
+      if (otpHint) {
+        otpHint.style.display = 'none';
+        otpHint.textContent = '';
+      }
+      const otpBtn = document.getElementById('otpBtn');
+      if (otpBtn) {
+        otpBtn.textContent = 'Get OTP';
+        otpBtn.classList.remove('sent');
+        otpBtn.disabled = false;
+      }
+      mockOTP = '';
       cart = []; updateCart();
       document.querySelectorAll('.product-card-wrap').forEach(wrap => {
         const addBtn = wrap.querySelector('.btn-add-card');
@@ -3136,12 +3202,21 @@
         const data = await res.json();
         document.getElementById('otpField').style.display = 'block';
         btn.textContent = 'Resend'; btn.classList.add('sent'); btn.disabled = false;
+        const hint = document.getElementById('checkoutOtpHint');
         if (data.demoOtp) {
-          alert(`📱 OTP sent to ${phone}\n\n[DEMO MODE] Your OTP is: ${data.demoOtp}`);
+          mockOTP = data.demoOtp;
+          document.getElementById('otpInput').value = data.demoOtp;
+          if (hint) {
+            hint.style.display = 'block';
+            hint.textContent = `Demo OTP: ${data.demoOtp}. Enter this OTP to place order.`;
+          }
         } else {
-          alert(`📱 OTP sent to ${phone} via SMS!`);
+          mockOTP = '__SMS__';
+          if (hint) {
+            hint.style.display = 'block';
+            hint.textContent = `OTP sent to ${phone} via SMS. Enter OTP to continue.`;
+          }
         }
-        mockOTP = data.demoOtp || '__SMS__';
       } catch (e) {
         btn.textContent = 'Get OTP'; btn.disabled = false;
         alert('Failed to send OTP. Try again.');
@@ -3216,15 +3291,30 @@
     }
 
     /* ─── LOGIN ─── */
-    function openLoginModal() { document.getElementById('loginModal').classList.add('open'); }
+    function openLoginModal() {
+      const userTab = document.querySelector('.login-tab[data-mode="user"]');
+      setLoginMode('user', userTab);
+      document.getElementById('loginModal').classList.add('open');
+    }
+    function openSignupModal() {
+      const signupTab = document.querySelector('.login-tab[data-mode="signup"]');
+      setLoginMode('signup', signupTab);
+      document.getElementById('loginModal').classList.add('open');
+    }
     function closeLoginModal() { document.getElementById('loginModal').classList.remove('open'); }
 
     function setLoginMode(mode, btn) {
       loginMode = mode;
       document.querySelectorAll('.login-tab').forEach(t => t.classList.remove('active'));
-      btn.classList.add('active');
+      if (btn) btn.classList.add('active');
+      const loginSubmitBtn = document.getElementById('loginSubmitBtn');
       document.getElementById('loginFormArea').style.display = mode === 'user' ? 'block' : 'none';
       document.getElementById('adminLoginArea').style.display = mode === 'admin' ? 'block' : 'none';
+      document.getElementById('signupArea').style.display = mode === 'signup' ? 'block' : 'none';
+      if (loginSubmitBtn) {
+        loginSubmitBtn.style.display = mode === 'signup' ? 'none' : 'block';
+        loginSubmitBtn.textContent = mode === 'admin' ? 'Login as Admin →' : 'Login →';
+      }
     }
 
     async function loginSendOTP() {
@@ -3237,16 +3327,47 @@
         });
         const data = await res.json();
         document.getElementById('loginOtpRow').style.display = 'block';
+        const hint = document.getElementById('loginOtpHint');
         if (data.demoOtp) {
           loginMockOTP = data.demoOtp;
-          alert(`📱 OTP sent\n\n[DEMO MODE] Your OTP is: ${data.demoOtp}`);
+          document.getElementById('loginOtp').value = data.demoOtp;
+          if (hint) {
+            hint.style.display = 'block';
+            hint.textContent = `Demo OTP: ${data.demoOtp}. Use this to login now.`;
+          }
         } else {
           loginMockOTP = '__SMS__';
-          alert(`📱 OTP sent to ${phone} via SMS!`);
+          if (hint) {
+            hint.style.display = 'block';
+            hint.textContent = `OTP sent to ${phone} via SMS.`;
+          }
         }
       } catch (e) {
         alert('Failed to send OTP. Try again.');
       }
+    }
+
+    function doSignup() {
+      const name = document.getElementById('signupName').value.trim();
+      const phone = document.getElementById('signupPhone').value.trim();
+      const email = document.getElementById('signupEmail').value.trim();
+      const password = document.getElementById('signupPassword').value;
+      const confirmPassword = document.getElementById('signupConfirmPassword').value;
+      const normalizedPhone = normalizePhone(phone);
+
+      if (!name || !phone || !email || !password || !confirmPassword) { alert('Please fill all sign up fields'); return; }
+      if (normalizedPhone.length < 10) { alert('Please enter a valid mobile number'); return; }
+      if (password.length < 6) { alert('Password must be at least 6 characters'); return; }
+      if (password !== confirmPassword) { alert('Passwords do not match'); return; }
+      if (findUserByPhone(phone)) { alert('An account with this mobile number already exists'); return; }
+
+      userAccounts.push({ name, phone, email, password, createdAt: new Date().toISOString() });
+      saveUserAccounts();
+      document.getElementById('loginPhone').value = phone;
+      document.getElementById('loginPassword').value = password;
+      const userTab = document.querySelector('.login-tab[data-mode="user"]');
+      setLoginMode('user', userTab);
+      alert('✅ Account created. You can now login with mobile + password.');
     }
 
     async function doLogin() {
@@ -3274,7 +3395,17 @@
         }
       } else {
         const phone = document.getElementById('loginPhone').value.trim();
+        const password = document.getElementById('loginPassword').value;
         const otp = document.getElementById('loginOtp').value.trim();
+        if (!phone) { alert('Enter mobile number'); return; }
+        if (password) {
+          const account = findUserByPhone(phone);
+          if (!account || account.password !== password) { alert('Invalid mobile number or password'); return; }
+          currentUser = { phone: account.phone, name: account.name, email: account.email };
+          document.getElementById('loginBtn').textContent = '👤 ' + account.phone.slice(-4);
+          closeLoginModal();
+          return;
+        }
         try {
           const res = await fetch('/api/otp/verify', {
             method: 'POST', headers: { 'Content-Type': 'application/json' },
@@ -3585,6 +3716,7 @@
       }
     }
 
+    loadUserAccounts();
     initCatalogue();
     window.addEventListener('resize', syncTopOffsets);
   </script>
