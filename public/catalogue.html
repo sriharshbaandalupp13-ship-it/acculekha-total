@@ -3367,14 +3367,32 @@
       renderAllProducts();
     }
 
-    function toggleProd(idx, field, val) { PRODUCTS[idx][field] = val; }
-    function updatePrice(idx, val) { PRODUCTS[idx].price = parseInt(val) || PRODUCTS[idx].price; }
-    function toggleSale(idx, val) { PRODUCTS[idx].offer = val ? (PRODUCTS[idx].offer || 'SALE') : ''; }
-    function updateOffer(idx, val) { PRODUCTS[idx].offer = (val || '').trim(); }
-    function updateVideoUrl(idx, val) { PRODUCTS[idx].videoUrl = (val || '').trim(); }
+    function toggleProd(idx, field, val) {
+      PRODUCTS[idx][field] = val;
+      saveProductToDB(idx, { [field]: val });
+    }
+    function updatePrice(idx, val) {
+      const price = parseInt(val) || PRODUCTS[idx].price;
+      PRODUCTS[idx].price = price;
+      saveProductToDB(idx, { price });
+    }
+    function toggleSale(idx, val) {
+      PRODUCTS[idx].offer = val ? (PRODUCTS[idx].offer || 'SALE') : '';
+      saveProductToDB(idx, { offer: PRODUCTS[idx].offer });
+    }
+    function updateOffer(idx, val) {
+      PRODUCTS[idx].offer = (val || '').trim();
+      saveProductToDB(idx, { offer: PRODUCTS[idx].offer });
+    }
+    function updateVideoUrl(idx, val) {
+      PRODUCTS[idx].videoUrl = (val || '').trim();
+      saveProductToDB(idx, { videoUrl: PRODUCTS[idx].videoUrl });
+    }
     function updateImageUrl(idx, imageIndex, val) {
       if (!Array.isArray(PRODUCTS[idx].images)) PRODUCTS[idx].images = [];
       PRODUCTS[idx].images[imageIndex] = (val || '').trim();
+      const imageKey = `image${imageIndex + 1}`;
+      saveProductToDB(idx, { [imageKey]: PRODUCTS[idx].images[imageIndex] });
     }
     function toggleMediaEditor(idx) {
       const panel = document.getElementById('media-edit-' + idx);
@@ -3496,8 +3514,56 @@
     document.getElementById('galleryMain').addEventListener('touchend', detailTouchEnd, { passive: true });
 
     /* ─── INIT ─── */
-    renderAllProducts();
-    syncTopOffsets();
+    /* ─── INIT: Load products from DB then render ─── */
+    async function initCatalogue() {
+      try {
+        const res = await fetch('/api/products');
+        if (res.ok) {
+          const dbProducts = await res.json();
+          if (Array.isArray(dbProducts) && dbProducts.length > 0) {
+            // Merge DB data into PRODUCTS array (match by slug/id)
+            dbProducts.forEach(dbP => {
+              const local = PRODUCTS.find(p => p.id === dbP.slug || p.id === dbP.id);
+              if (local) {
+                local._dbId = dbP.id;
+                local.enabled = dbP.enabled;
+                local.inStock = dbP.inStock;
+                local.isNew = dbP.isNew;
+                local.price = dbP.price;
+                local.origPrice = dbP.origPrice || local.origPrice;
+                local.offer = dbP.offer || '';
+                if (dbP.image1) local.images[0] = dbP.image1;
+                if (dbP.image2) local.images[1] = dbP.image2;
+                if (dbP.image3) local.images[2] = dbP.image3;
+                if (dbP.image4) local.images[3] = dbP.image4;
+                if (dbP.videoUrl) local.videoUrl = dbP.videoUrl;
+              }
+            });
+          }
+        }
+      } catch (e) {
+        console.log('Using local product data (API unavailable)');
+      }
+      renderAllProducts();
+      syncTopOffsets();
+    }
+
+    /* ─── SAVE to DB helper ─── */
+    async function saveProductToDB(idx, patch) {
+      const p = PRODUCTS[idx];
+      const id = p._dbId || p.id;
+      try {
+        await fetch(`/api/products/${id}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(patch)
+        });
+      } catch (e) {
+        console.error('Failed to save product change to DB', e);
+      }
+    }
+
+    initCatalogue();
     window.addEventListener('resize', syncTopOffsets);
   </script>
 </body>
