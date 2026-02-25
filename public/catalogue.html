@@ -1,0 +1,2145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Acculekhaa – Product Catalogue | www.acculekhaa.com/catalogue</title>
+<meta name="description" content="Explore Acculekhaa's AI Campus Management Solutions – Software, Hardware, IoT & Services. Request quotes, add to cart, and order online.">
+<meta property="og:title" content="Acculekhaa Product Catalogue">
+<meta property="og:description" content="AI Campus Management Solutions – Shop Now">
+<meta property="og:image" content="https://acculekhaa.com/Assets/logo.png">
+<meta property="og:url" content="https://www.acculekhaa.com/catalogue">
+<link rel="icon" type="image/png" href="Assets/logo.png">
+<link rel="apple-touch-icon" href="Assets/logo.png">
+
+<!-- Bootstrap 5 -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<!-- Bootstrap Icons -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+
+<style>
+/* ─── DESIGN TOKENS ─── */
+:root {
+  --green: #1a7a3c;
+  --green-light: #2ecc71;
+  --gold: #f5a623;
+  --red: #e74c3c;
+  --dark: #0d1117;
+  --dark2: #161b22;
+  --dark3: #1c2333;
+  --text: #e6edf3;
+  --text-muted: #8b949e;
+  --border: rgba(255,255,255,0.08);
+  --card-bg: rgba(22,27,34,0.9);
+  --admin-h: 0px;
+  --top-social-h: 0px;
+}
+
+* { box-sizing: border-box; }
+body { font-family: 'DM Sans', sans-serif; background: var(--dark); color: var(--text); overflow-x: hidden; margin:0; }
+body::before {
+  content: '';
+  position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background: radial-gradient(ellipse 80% 60% at 20% 10%, rgba(26,122,60,.15) 0%, transparent 60%),
+              radial-gradient(ellipse 60% 40% at 80% 80%, rgba(245,166,35,.08) 0%, transparent 55%);
+}
+
+/* ─── ADMIN BAR ─── */
+.admin-bar {
+  background: var(--green); color: #fff;
+  padding: 6px 20px; font-size: .78rem; font-weight: 600;
+  display: none; align-items: center; gap: 12px;
+  position: sticky; top: 0; z-index: 320;
+}
+.admin-bar.show { display: flex; }
+.admin-bar a { color: #fff; text-decoration: none; opacity: .85; }
+.admin-bar a:hover { opacity: 1; }
+
+/* ─── TOPBAR SOCIAL ─── */
+.top-social {
+  background: var(--dark3); border-bottom: 1px solid var(--border);
+  padding: 6px 20px; display: flex; align-items: center; justify-content: space-between;
+  font-size: .78rem; color: var(--text-muted);
+  position: sticky; top: var(--admin-h); z-index: 310;
+}
+.social-links a {
+  color: var(--text-muted); text-decoration: none;
+  margin-left: 10px; transition: color .2s; font-size: .95rem;
+}
+.social-links a:hover { color: var(--green-light); }
+.share-btn {
+  background: none; border: 1px solid var(--border); border-radius: 8px;
+  color: var(--text-muted); padding: 3px 10px; font-size: .75rem;
+  cursor: pointer; transition: all .2s;
+}
+.share-btn:hover { border-color: var(--green-light); color: var(--green-light); }
+
+/* ─── NAVBAR ─── */
+.navbar {
+  background: rgba(13,17,23,.92) !important;
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  position: sticky; top: calc(var(--admin-h) + var(--top-social-h)); z-index: 300;
+}
+.navbar-brand { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.35rem; color: var(--text) !important; }
+.navbar-brand img { height: 38px; width: auto; }
+.navbar-brand span { color: var(--green-light); }
+.navbar-toggler { border-color: var(--border); }
+.navbar-toggler-icon { filter: invert(1); }
+.nav-link { color: var(--text-muted) !important; font-size: .88rem; font-weight: 500; cursor: pointer; transition: color .2s; }
+.nav-link:hover { color: var(--green-light) !important; }
+
+.btn-cart {
+  position: relative; background: none; border: 1px solid var(--border);
+  border-radius: 10px; padding: 7px 14px; color: var(--text);
+  font-size: .95rem; transition: border-color .2s; white-space: nowrap; cursor: pointer;
+}
+.btn-cart:hover { border-color: var(--green-light); }
+.cart-badge {
+  position: absolute; top: -7px; right: -7px; background: var(--gold);
+  color: #000; width: 19px; height: 19px; border-radius: 50%;
+  font-size: .6rem; font-weight: 800; display: flex; align-items: center; justify-content: center;
+}
+
+.btn-login {
+  background: var(--green); color: #fff; border: none;
+  border-radius: 10px; padding: 7px 16px; font-size: .85rem; font-weight: 600;
+  cursor: pointer; transition: background .2s;
+}
+.btn-login:hover { background: var(--green-light); }
+
+/* ─── HERO ─── */
+.hero-section { position: relative; z-index: 1; padding: 60px 0 40px; text-align: center; overflow: visible; }
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(26,122,60,.2); border: 1px solid rgba(46,204,113,.3);
+  border-radius: 100px; padding: 6px 16px; font-size: .8rem;
+  color: var(--green-light); font-weight: 500; margin-bottom: 20px;
+}
+.hero-section h1 {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(1.8rem, 5vw, 3.8rem);
+  font-weight: 800; line-height: 1.1; letter-spacing: -.03em; margin-bottom: 12px;
+}
+.accent { color: var(--green-light); }
+.hero-lead { color: var(--text-muted); max-width: 600px; margin: 0 auto 28px; }
+.hero-logo { display: block; margin: 0 auto 20px; height: 56px; width: auto; max-width: 220px; object-fit: contain; }
+
+/* ─── FILTER PILLS ─── */
+.filter-scroll {
+  display: flex; gap: 8px; overflow-x: auto;
+  padding-bottom: 6px; -webkit-overflow-scrolling: touch;
+  justify-content: center; flex-wrap: wrap;
+}
+.filter-btn {
+  padding: 7px 18px; border-radius: 100px; border: 1px solid var(--border);
+  background: var(--dark2); color: var(--text-muted); font-size: .82rem;
+  cursor: pointer; transition: all .2s; white-space: nowrap;
+}
+.filter-btn:hover, .filter-btn.active {
+  background: var(--green); border-color: var(--green); color: #fff;
+}
+
+/* ─── PRODUCT CARD ─── */
+.product-card {
+  background: var(--card-bg); border: 1px solid var(--border);
+  border-radius: 20px; overflow: hidden; height: 100%;
+  transition: transform .3s, border-color .3s, box-shadow .3s;
+  position: relative;
+}
+.product-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(46,204,113,.35);
+  box-shadow: 0 18px 50px rgba(0,0,0,.4);
+}
+.card-header-img {
+  height: 155px; display: flex; align-items: center; justify-content: center;
+  position: relative; overflow: hidden; cursor: pointer;
+  touch-action: pan-y;
+}
+.card-media-track { position: absolute; inset: 0; }
+.card-media-slide {
+  position: absolute; inset: 0;
+  opacity: 0; transition: opacity .25s ease;
+}
+.card-media-slide.active { opacity: 1; }
+.card-media-slide img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.card-video-thumb {
+  width: 100%; height: 100%;
+  display: flex; align-items: center; justify-content: center;
+  position: relative; overflow: hidden;
+  background: linear-gradient(135deg, rgba(10,50,35,.8), rgba(15,25,45,.8));
+  color: #fff; font-size: 2.2rem;
+}
+.card-video-thumb video {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+}
+.card-video-thumb i {
+  position: absolute; left: 8px; bottom: 8px;
+  width: 28px; height: 28px; border-radius: 50%;
+  background: rgba(0,0,0,.45);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem; pointer-events: none;
+}
+.card-icon { font-size: 3.2rem; position: relative; z-index: 1; }
+.card-bg-glow { position: absolute; inset: 0; opacity: .18; }
+.badge-cat {
+  position: absolute; top: 10px; left: 10px;
+  background: rgba(0,0,0,.65); backdrop-filter: blur(8px);
+  border: 1px solid var(--border); border-radius: 100px;
+  padding: 2px 9px; font-size: .68rem; font-weight: 600;
+  color: var(--text-muted); text-transform: uppercase; letter-spacing: .05em;
+  z-index: 2;
+}
+.badge-new {
+  position: absolute; top: 10px; right: 10px;
+  background: var(--gold); border-radius: 100px;
+  padding: 2px 9px; font-size: .68rem; font-weight: 700; color: #000; z-index: 2;
+}
+.badge-outofstock {
+  position: absolute; top: 10px; right: 10px;
+  background: var(--red); border-radius: 100px;
+  padding: 2px 9px; font-size: .68rem; font-weight: 700; color: #fff; z-index: 2;
+}
+.badge-offer {
+  position: absolute; bottom: 10px; left: 10px;
+  background: rgba(231,76,60,.85); border-radius: 100px;
+  padding: 2px 9px; font-size: .68rem; font-weight: 700; color: #fff; z-index: 2;
+}
+
+/* image slider dots */
+.img-dots { position: absolute; bottom: 8px; right: 10px; display: flex; gap: 4px; z-index: 3; }
+.img-dot { width: 5px; height: 5px; border-radius: 50%; background: rgba(255,255,255,.4); cursor: pointer; transition: background .2s; }
+.img-dot.active { background: var(--green-light); }
+.img-dot.video-dot { border: 1px solid rgba(255,255,255,.7); }
+.card-media-nav {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  width: 24px; height: 24px; border: 1px solid rgba(255,255,255,.25);
+  border-radius: 8px; background: rgba(0,0,0,.35); color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-size: .85rem; cursor: pointer; z-index: 3;
+}
+.card-media-nav.prev { left: 8px; }
+.card-media-nav.next { right: 8px; }
+.card-media-nav:hover { background: rgba(0,0,0,.6); border-color: rgba(255,255,255,.5); }
+
+.card-body-inner { padding: 16px 18px 18px; }
+.card-title { font-family: 'Syne', sans-serif; font-size: .97rem; font-weight: 700; margin-bottom: 6px; line-height: 1.35; }
+.card-desc { font-size: .8rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 12px; }
+.feat-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 12px; }
+.feat-tag {
+  background: rgba(26,122,60,.15); border: 1px solid rgba(46,204,113,.2);
+  border-radius: 6px; padding: 2px 7px; font-size: .68rem; color: var(--green-light);
+}
+.card-price-row { display: flex; align-items: flex-end; gap: 6px; flex-wrap: wrap; margin-bottom: 4px; }
+.card-price { font-family: 'Syne', sans-serif; font-size: 1.15rem; font-weight: 800; color: var(--text); }
+.card-price small { font-size: .7rem; font-weight: 400; color: var(--text-muted); font-family: 'DM Sans'; }
+.price-original { text-decoration: line-through; color: var(--text-muted); font-size: .82rem; }
+.price-discount { color: var(--gold); font-size: .75rem; font-weight: 700; }
+.gst-note { font-size: .68rem; color: var(--text-muted); margin-bottom: 10px; }
+
+.btn-add-card {
+  background: var(--green); color: #fff; border: none;
+  border-radius: 9px; padding: 8px 14px; font-size: .8rem;
+  font-weight: 600; cursor: pointer; transition: all .2s;
+}
+.btn-add-card:hover { background: var(--green-light); transform: scale(1.03); }
+.btn-add-card:disabled { background: #444; cursor: not-allowed; opacity: .6; }
+
+.btn-learn {
+  background: none; color: var(--green-light);
+  border: 1px solid rgba(46,204,113,.3); border-radius: 9px;
+  padding: 8px 11px; font-size: .76rem; font-weight: 600;
+  cursor: pointer; transition: all .2s; white-space: nowrap;
+}
+.btn-learn:hover { background: rgba(46,204,113,.1); }
+
+.btn-inquiry {
+  background: none; color: var(--gold);
+  border: 1px solid rgba(245,166,35,.3); border-radius: 9px;
+  padding: 8px 11px; font-size: .76rem; font-weight: 600;
+  cursor: pointer; transition: all .2s;
+}
+.btn-inquiry:hover { background: rgba(245,166,35,.1); }
+
+/* Stepper */
+.card-stepper { display: none; align-items: center; border-radius: 9px; overflow: hidden; border: 1.5px solid var(--green); }
+.card-stepper.visible { display: flex; }
+.cs-btn {
+  width: 30px; height: 34px; background: var(--green); color: #fff;
+  border: none; font-size: 1rem; font-weight: 700; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+}
+.cs-btn:hover { background: var(--green-light); }
+.cs-num {
+  min-width: 28px; text-align: center; font-family: 'Syne', sans-serif;
+  font-size: .88rem; font-weight: 700; color: var(--text);
+  background: var(--dark3); height: 34px; display: flex; align-items: center; justify-content: center;
+}
+
+/* ─── PRODUCT DETAIL MODAL ─── */
+.detail-modal {
+  position: fixed; inset: 0; z-index: 2000;
+  display: none; align-items: flex-start; justify-content: center;
+  background: rgba(0,0,0,.75); backdrop-filter: blur(8px);
+  overflow-y: auto; padding: 20px;
+}
+.detail-modal.open { display: flex; }
+.detail-box {
+  background: var(--dark2); border: 1px solid var(--border);
+  border-radius: 24px; width: 100%; max-width: 920px;
+  margin: auto; overflow: hidden;
+  animation: slideUp .3s ease;
+}
+@keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+.detail-close {
+  position: absolute; top: 16px; right: 16px;
+  background: var(--dark3); border: 1px solid var(--border);
+  color: var(--text); width: 38px; height: 38px; border-radius: 10px;
+  font-size: 1.1rem; cursor: pointer; display: flex; align-items: center; justify-content: center;
+  z-index: 10;
+}
+.detail-close:hover { border-color: var(--green-light); color: var(--green-light); }
+
+/* image gallery in detail */
+.gallery-main {
+  height: 280px; background: var(--dark3);
+  display: flex; align-items: center; justify-content: center;
+  position: relative; overflow: hidden;
+  touch-action: pan-y;
+}
+.gallery-main img { width: 100%; height: 100%; object-fit: contain; }
+.gallery-main video { width: 100%; height: 100%; object-fit: contain; background: #000; }
+.gallery-main .gallery-icon { font-size: 5rem; }
+.gallery-thumbs {
+  display: flex; gap: 8px; padding: 10px 20px;
+  overflow-x: auto; background: var(--dark3);
+  border-bottom: 1px solid var(--border);
+}
+.g-thumb {
+  width: 60px; height: 48px; flex-shrink: 0;
+  border-radius: 8px; background: var(--dark2);
+  border: 2px solid transparent; cursor: pointer; overflow: hidden;
+  display: flex; align-items: center; justify-content: center; font-size: 1.5rem;
+  transition: border-color .2s;
+}
+.g-thumb.active { border-color: var(--green-light); }
+.g-thumb img { width: 100%; height: 100%; object-fit: cover; }
+
+.det-body { padding: 24px; }
+.det-badge { display: inline-block; background: rgba(26,122,60,.2); border: 1px solid rgba(46,204,113,.3); border-radius: 100px; padding: 3px 12px; font-size: .72rem; color: var(--green-light); font-weight: 600; margin-bottom: 10px; text-transform: uppercase; letter-spacing: .06em; }
+.det-title { font-family: 'Syne', sans-serif; font-size: clamp(1.4rem,3vw,2.2rem); font-weight: 800; line-height: 1.15; letter-spacing: -.02em; margin-bottom: 8px; }
+.det-desc { color: var(--text-muted); line-height: 1.75; margin-bottom: 18px; font-size: .9rem; }
+.det-price { font-family: 'Syne', sans-serif; font-size: 1.7rem; font-weight: 800; color: var(--green-light); }
+.det-orig { text-decoration: line-through; color: var(--text-muted); font-size: 1rem; margin-left: 8px; }
+.det-discount { color: var(--gold); font-size: .85rem; font-weight: 700; }
+
+.spec-table { width: 100%; border-collapse: collapse; font-size: .83rem; margin-top: 12px; }
+.spec-table tr { border-bottom: 1px solid var(--border); }
+.spec-table tr:last-child { border-bottom: none; }
+.spec-table td { padding: 8px 10px; }
+.spec-table td:first-child { color: var(--text-muted); width: 40%; }
+.spec-table td:last-child { color: var(--text); font-weight: 500; }
+
+.section-head { font-family: 'Syne', sans-serif; font-size: .9rem; font-weight: 700; margin-bottom: 10px; color: var(--text); }
+.feat-check { list-style: none; padding: 0; margin: 0; }
+.feat-check li { padding: 5px 0; font-size: .83rem; color: var(--text-muted); display: flex; align-items: flex-start; gap: 8px; }
+.feat-check li::before { content: '✓'; color: var(--green-light); font-weight: 700; flex-shrink: 0; }
+
+/* ─── VIDEO EMBED ─── */
+.video-wrap { border-radius: 14px; overflow: hidden; background: #000; margin-top: 16px; }
+.video-wrap video { width: 100%; max-height: 260px; display: block; }
+.video-wrap iframe { width: 100%; height: 220px; border: none; display: block; }
+
+/* ─── CART SIDEBAR ─── */
+.cart-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,.6); backdrop-filter: blur(4px);
+  z-index: 1040; opacity: 0; pointer-events: none; transition: opacity .3s;
+}
+.cart-overlay.open { opacity: 1; pointer-events: all; }
+.cart-sidebar {
+  position: fixed; top: 0; right: 0;
+  width: 400px; max-width: 95vw; height: 100dvh;
+  background: var(--dark2); border-left: 1px solid var(--border);
+  z-index: 1041; transform: translateX(100%);
+  transition: transform .4s cubic-bezier(.16,1,.3,1);
+  display: flex; flex-direction: column;
+}
+.cart-sidebar.open { transform: translateX(0); }
+.cart-head { padding: 18px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+.cart-head h2 { font-family: 'Syne', sans-serif; font-size: 1.15rem; font-weight: 700; margin: 0; }
+.close-cart { background: none; border: none; color: var(--text-muted); font-size: 1.3rem; cursor: pointer; width: 34px; height: 34px; border-radius: 8px; display: flex; align-items: center; justify-content: center; transition: background .2s; }
+.close-cart:hover { background: var(--dark3); color: var(--text); }
+.cart-items { flex: 1; overflow-y: auto; padding: 16px 20px; }
+.cart-empty { text-align: center; padding: 48px 20px; color: var(--text-muted); }
+.cart-empty .ce-icon { font-size: 3rem; margin-bottom: 12px; }
+.cart-item { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+.ci-icon { width: 44px; height: 44px; background: var(--dark3); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; flex-shrink: 0; }
+.ci-info { flex: 1; min-width: 0; }
+.ci-name { font-family: 'Syne', sans-serif; font-size: .85rem; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ci-price { font-size: .75rem; color: var(--green-light); margin-top: 2px; }
+.ci-qty { display: flex; align-items: center; gap: 6px; }
+.qty-btn { width: 26px; height: 26px; background: var(--dark3); border: 1px solid var(--border); border-radius: 6px; color: var(--text); font-size: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background .2s; }
+.qty-btn:hover { background: var(--green); border-color: var(--green); }
+.qty-num { font-family: 'Syne', sans-serif; font-size: .88rem; font-weight: 700; min-width: 20px; text-align: center; }
+.cart-footer { padding: 16px 20px; border-top: 1px solid var(--border); }
+.cart-total-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.cart-total-label { font-size: .82rem; color: var(--text-muted); }
+.cart-total-val { font-family: 'Syne', sans-serif; font-size: 1.15rem; font-weight: 800; color: var(--green-light); }
+.gst-row { font-size: .72rem; color: var(--text-muted); margin-bottom: 14px; }
+.btn-checkout {
+  width: 100%; background: linear-gradient(135deg, var(--green), var(--green-light));
+  color: #fff; border: none; border-radius: 12px; padding: 12px;
+  font-family: 'Syne', sans-serif; font-size: .95rem; font-weight: 700;
+  cursor: pointer; transition: opacity .2s;
+}
+.btn-checkout:hover { opacity: .9; }
+.payment-icons { display: flex; gap: 6px; align-items: center; justify-content: center; margin-top: 10px; }
+.pay-icon { background: var(--dark3); border: 1px solid var(--border); border-radius: 6px; padding: 3px 8px; font-size: .7rem; color: var(--text-muted); }
+
+/* ─── CHECKOUT MODAL ─── */
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,.75); backdrop-filter: blur(8px);
+  z-index: 3000; display: none; align-items: center; justify-content: center; padding: 20px;
+  overflow-y: auto;
+}
+.modal-overlay.open { display: flex; }
+.modal-box {
+  background: var(--dark2); border: 1px solid var(--border); border-radius: 22px;
+  width: 100%; max-width: 600px; max-height: 90vh; overflow-y: auto; padding: 30px;
+  animation: slideUp .3s ease;
+}
+.modal-title { font-family: 'Syne', sans-serif; font-size: 1.4rem; font-weight: 800; margin-bottom: 6px; }
+.form-label { font-size: .82rem; color: var(--text-muted); margin-bottom: 4px; display: block; }
+.form-inp {
+  width: 100%; background: var(--dark3); border: 1px solid var(--border);
+  border-radius: 10px; padding: 10px 14px; color: var(--text); font-size: .88rem;
+  outline: none; transition: border-color .2s; margin-bottom: 12px;
+}
+.form-inp:focus { border-color: var(--green-light); }
+.form-inp::placeholder { color: var(--text-muted); }
+select.form-inp { cursor: pointer; }
+.otp-row { display: flex; gap: 8px; align-items: flex-end; }
+.otp-row .form-inp { flex: 1; margin-bottom: 0; }
+.btn-otp {
+  background: var(--green); color: #fff; border: none;
+  border-radius: 10px; padding: 10px 14px; font-size: .8rem;
+  font-weight: 600; cursor: pointer; transition: background .2s; white-space: nowrap;
+  height: 42px;
+}
+.btn-otp:hover { background: var(--green-light); }
+.btn-otp.sent { background: var(--gold); color: #000; }
+
+.tab-row { display: flex; gap: 8px; margin-bottom: 18px; }
+.tab-btn {
+  flex: 1; padding: 9px 8px; border-radius: 10px;
+  border: 1px solid var(--border); background: var(--dark3);
+  color: var(--text-muted); font-size: .82rem; font-weight: 600; cursor: pointer; transition: all .2s;
+}
+.tab-btn.active { background: var(--green); border-color: var(--green); color: #fff; }
+
+.btn-place {
+  width: 100%; background: linear-gradient(135deg, var(--green), var(--green-light));
+  color: #fff; border: none; border-radius: 12px; padding: 13px;
+  font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700;
+  cursor: pointer; transition: opacity .2s; margin-top: 10px;
+}
+.btn-place:hover { opacity: .9; }
+.btn-cancel-modal {
+  width: 100%; background: none; border: 1px solid var(--border);
+  border-radius: 12px; padding: 11px;
+  color: var(--text-muted); font-size: .9rem; cursor: pointer; margin-top: 8px;
+  transition: border-color .2s;
+}
+.btn-cancel-modal:hover { border-color: var(--text-muted); }
+
+.success-screen { padding: 20px 0; }
+.success-icon { width: 70px; height: 70px; background: var(--green); border-radius: 50%; font-size: 2rem; display: flex; align-items: center; justify-content: center; margin: 0 auto 18px; }
+.gst-bill-preview { background: var(--dark3); border: 1px solid var(--border); border-radius: 14px; padding: 18px; margin-top: 16px; text-align: left; }
+.gst-line { display: flex; justify-content: space-between; font-size: .82rem; padding: 5px 0; border-bottom: 1px solid var(--border); }
+.gst-line:last-child { border-bottom: none; font-weight: 700; color: var(--green-light); }
+
+/* ─── INQUIRY MODAL ─── */
+.inquiry-modal {
+  position: fixed; inset: 0; background: rgba(0,0,0,.75); backdrop-filter: blur(8px);
+  z-index: 3500; display: none; align-items: center; justify-content: center; padding: 20px;
+}
+.inquiry-modal.open { display: flex; }
+.inquiry-box {
+  background: var(--dark2); border: 1px solid var(--border); border-radius: 22px;
+  width: 100%; max-width: 480px; padding: 28px; animation: slideUp .3s ease;
+}
+
+/* ─── LOGIN MODAL ─── */
+.login-modal {
+  position: fixed; inset: 0; background: rgba(0,0,0,.75); backdrop-filter: blur(8px);
+  z-index: 4000; display: none; align-items: center; justify-content: center; padding: 20px;
+}
+.login-modal.open { display: flex; }
+.login-box {
+  background: var(--dark2); border: 1px solid var(--border); border-radius: 22px;
+  width: 100%; max-width: 440px; padding: 32px; animation: slideUp .3s ease;
+}
+.login-tabs { display: flex; gap: 8px; margin-bottom: 22px; }
+.login-tab {
+  flex: 1; padding: 9px; border-radius: 10px;
+  border: 1px solid var(--border); background: var(--dark3);
+  color: var(--text-muted); font-size: .85rem; font-weight: 600; cursor: pointer; transition: all .2s;
+}
+.login-tab.active { background: var(--green); border-color: var(--green); color: #fff; }
+
+/* ─── ADMIN PANEL ─── */
+.admin-panel {
+  position: fixed; inset: 0; background: rgba(0,0,0,.85); backdrop-filter: blur(10px);
+  z-index: 5000; display: none; align-items: flex-start; justify-content: center;
+  padding: 20px; overflow-y: auto;
+}
+.admin-panel.open { display: flex; }
+.admin-box {
+  background: var(--dark2); border: 1px solid var(--border); border-radius: 22px;
+  width: 100%; max-width: 900px; padding: 28px; animation: slideUp .3s ease;
+}
+.admin-product-row {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px; border-bottom: 1px solid var(--border);
+  border-radius: 10px; transition: background .2s;
+}
+.admin-product-row:hover { background: var(--dark3); }
+.admin-product-wrap {
+  border: 1px solid rgba(255,255,255,.04);
+  border-radius: 12px;
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+.admin-media-editor {
+  background: rgba(10,14,20,.55);
+  border-top: 1px solid var(--border);
+  padding: 12px;
+}
+.admin-media-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(180px, 1fr));
+  gap: 8px;
+}
+.admin-mini-label {
+  font-size: .68rem;
+  color: var(--text-muted);
+  margin-bottom: 2px;
+}
+.admin-mini-inp {
+  width: 100%;
+  background: var(--dark);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  padding: 5px 8px;
+  color: var(--text);
+  font-size: .76rem;
+}
+.admin-toggle {
+  position: relative; width: 42px; height: 22px; cursor: pointer;
+}
+.admin-toggle input { opacity: 0; width: 0; height: 0; }
+.toggle-slider {
+  position: absolute; inset: 0; background: var(--dark3);
+  border: 1px solid var(--border); border-radius: 100px;
+  transition: background .2s;
+}
+.toggle-slider::before {
+  content: ''; position: absolute; left: 2px; top: 2px;
+  width: 16px; height: 16px; border-radius: 50%;
+  background: var(--text-muted); transition: transform .2s, background .2s;
+}
+.admin-toggle input:checked + .toggle-slider { background: var(--green); border-color: var(--green); }
+.admin-toggle input:checked + .toggle-slider::before { transform: translateX(20px); background: #fff; }
+
+/* ─── REPORTS PANEL ─── */
+.reports-panel {
+  background: var(--card-bg); border: 1px solid var(--border);
+  border-radius: 20px; padding: 24px; margin-top: 40px;
+}
+.reports-tab { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+.report-tab-btn {
+  padding: 7px 16px; border-radius: 10px; border: 1px solid var(--border);
+  background: var(--dark3); color: var(--text-muted); font-size: .8rem;
+  font-weight: 600; cursor: pointer; transition: all .2s;
+}
+.report-tab-btn.active { background: var(--green); border-color: var(--green); color: #fff; }
+.report-table { width: 100%; border-collapse: collapse; font-size: .82rem; }
+.report-table th { padding: 8px 12px; border-bottom: 1px solid var(--border); text-align: left; color: var(--text-muted); font-weight: 600; text-transform: uppercase; font-size: .7rem; letter-spacing: .06em; }
+.report-table td { padding: 10px 12px; border-bottom: 1px solid rgba(255,255,255,.04); }
+.report-table tr:last-child td { border-bottom: none; }
+.report-table tr:hover td { background: var(--dark3); }
+.status-chip { padding: 2px 8px; border-radius: 100px; font-size: .7rem; font-weight: 700; }
+.status-chip.paid { background: rgba(46,204,113,.15); color: var(--green-light); }
+.status-chip.pending { background: rgba(245,166,35,.15); color: var(--gold); }
+.status-chip.shipped { background: rgba(52,152,219,.15); color: #3498db; }
+
+/* ─── WHATSAPP FLOAT ─── */
+.wa-float {
+  position: fixed; bottom: 24px; right: 24px; z-index: 1000;
+  width: 56px; height: 56px; background: #25D366;
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  text-decoration: none; box-shadow: 0 6px 22px rgba(37,211,102,.45);
+  transition: transform .2s, box-shadow .2s, filter .2s;
+  color: #fff; font-size: 1.9rem; border: 2px solid #fff;
+}
+.wa-float:hover { transform: scale(1.08); box-shadow: 0 10px 30px rgba(37,211,102,.65); filter: saturate(1.05); }
+
+/* ─── SECTION LABELS ─── */
+.section-label {
+  font-family: 'Syne', sans-serif; font-size: 1.4rem; font-weight: 800;
+  margin-bottom: 20px; display: flex; align-items: center; gap: 10px;
+}
+.section-label span { font-size: .75rem; background: rgba(46,204,113,.15); border: 1px solid rgba(46,204,113,.3); color: var(--green-light); border-radius: 100px; padding: 3px 10px; font-weight: 600; }
+
+/* ─── MISC ─── */
+@keyframes fadeUp { from { transform: translateY(16px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+.animate-up { animation: fadeUp .5s ease both; }
+.hidden { display: none !important; }
+.text-green { color: var(--green-light); }
+.text-gold { color: var(--gold); }
+.text-muted { color: var(--text-muted) !important; }
+
+/* responsive */
+@media(max-width:576px) {
+  .hero-section { padding: 40px 0 28px; }
+  .detail-box { border-radius: 16px; }
+  .modal-box { padding: 20px; }
+}
+
+/* Social share bar */
+.share-bar {
+  background: var(--dark3); border: 1px solid var(--border);
+  border-radius: 14px; padding: 14px 18px;
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  margin-bottom: 30px;
+}
+.share-bar p { margin: 0; font-size: .82rem; color: var(--text-muted); }
+.share-pill {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 6px 14px; border-radius: 100px; text-decoration: none;
+  font-size: .78rem; font-weight: 600; transition: opacity .2s;
+}
+.share-pill:hover { opacity: .85; }
+.sp-wa { background: #25D366; color: #fff; }
+.sp-fb { background: #1877F2; color: #fff; }
+.sp-tw { background: #1DA1F2; color: #fff; }
+.sp-li { background: #0A66C2; color: #fff; }
+.sp-copy { background: var(--dark2); border: 1px solid var(--border); color: var(--text-muted); }
+
+/* Shiprocket / Payment badges */
+.integration-badges { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
+.int-badge { background: var(--dark3); border: 1px solid var(--border); border-radius: 8px; padding: 4px 12px; font-size: .73rem; color: var(--text-muted); display: flex; align-items: center; gap: 5px; }
+.int-badge .bi { color: var(--green-light); }
+
+/* ─── INTRO LOADER (VIDEO OVERLAY) ─── */
+.intro-loader {
+  position: fixed; inset: 0; z-index: 9999;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(13,17,23,.92); backdrop-filter: blur(10px);
+  transition: opacity .35s ease, visibility .35s ease;
+}
+.intro-loader.hidden { opacity: 0; visibility: hidden; }
+.intro-loader-video {
+  width: min(92vw, 920px); height: auto; max-height: 80vh;
+  border-radius: 18px; border: 1px solid rgba(255,255,255,.1);
+  box-shadow: 0 30px 120px rgba(0,0,0,.65); background: #000;
+}
+.intro-loader-skip {
+  position: absolute; bottom: 22px; right: 22px;
+  background: rgba(22,27,34,.75); border: 1px solid var(--border);
+  color: var(--text); border-radius: 12px; padding: 10px 14px;
+  font-family: inherit; font-size: .85rem; cursor: pointer; transition: border-color .2s, background .2s;
+}
+.intro-loader-skip:hover { border-color: var(--green-light); background: rgba(22,27,34,.95); }
+</style>
+</head>
+<body>
+
+<!-- Intro loader overlay (fake loading – 2x, muted) -->
+<div id="introLoader" class="intro-loader" aria-hidden="true">
+  <video id="introLoaderVideo" class="intro-loader-video" autoplay muted playsinline preload="auto">
+    <source src="Assets/Intro.mp4" type="video/mp4">
+  </video>
+  <button class="intro-loader-skip" type="button" onclick="hideIntroLoader()">Skip</button>
+</div>
+
+<!-- ─── ADMIN BAR (shown only when admin logged in) ─── -->
+<div class="admin-bar" id="adminBar">
+  <i class="bi bi-shield-check"></i> Admin Mode
+  <span>|</span>
+  <a href="#" onclick="openAdminPanel()">Manage Products</a>
+  <span>|</span>
+  <a href="#" onclick="showReports()">Reports</a>
+  <span>|</span>
+  <a href="#" onclick="logoutAdmin()">Logout</a>
+</div>
+
+<!-- ─── TOPBAR ─── -->
+<div class="top-social">
+  <div>📍 Hyderabad | 📞 +91-90324 06513 | <a href="mailto:info@acculekhaa.com" style="color:var(--text-muted);text-decoration:none;">info@acculekhaa.com</a></div>
+  <div class="social-links">
+    <button class="share-btn" onclick="copyShareLink()">🔗 Share Catalogue</button>
+    <a href="https://wa.me/919032406513" target="_blank" title="WhatsApp"><i class="bi bi-whatsapp"></i></a>
+    <a href="https://facebook.com" target="_blank" title="Facebook"><i class="bi bi-facebook"></i></a>
+    <a href="https://instagram.com" target="_blank" title="Instagram"><i class="bi bi-instagram"></i></a>
+    <a href="https://linkedin.com" target="_blank" title="LinkedIn"><i class="bi bi-linkedin"></i></a>
+    <a href="https://twitter.com" target="_blank" title="Twitter"><i class="bi bi-twitter-x"></i></a>
+  </div>
+</div>
+
+<!-- ─── NAVBAR ─── -->
+<nav class="navbar navbar-expand-lg">
+  <div class="container-xl">
+    <a class="navbar-brand" href="https://www.acculekhaa.com">
+      <img src="Assets/logo.png" alt="Acculekhaa Logo">
+      Accu<span>lekhaa</span>
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMain">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navMain">
+      <ul class="navbar-nav me-auto gap-1 ms-3">
+        <li class="nav-item"><a class="nav-link" href="http://acculekhaa.com/index.php">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="https://acculekhaa.com/about-us.php">About</a></li>
+        <li class="nav-item"><a class="nav-link active text-green" href="#">Catalogue</a></li>
+        <li class="nav-item"><a class="nav-link" href="https://acculekhaa.com/contact.php">Contact</a></li>
+      </ul>
+      <div class="d-flex align-items-center gap-2 mt-2 mt-lg-0">
+        <button class="btn-cart" onclick="toggleCart()">
+          🛒 Cart <div class="cart-badge" id="cartBadge">0</div>
+        </button>
+        <button class="btn-login" onclick="openLoginModal()" id="loginBtn">Login</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- ─── HERO ─── -->
+<div class="hero-section" style="position:relative;z-index:1;">
+  <div class="container-xl">
+    <h1>Acculekhaa <span class="accent">Solutions</span> Store</h1>
+    <p class="hero-lead">AI-powered Campus Management · Explore, Compare & Order Online</p>
+
+    <!-- Filter Pills -->
+    <div class="filter-scroll justify-content-center">
+      <button class="filter-btn active" onclick="filterCat('all',this)">All Products</button>
+      <button class="filter-btn" onclick="filterCat('software',this)">💻 Software</button>
+      <button class="filter-btn" onclick="filterCat('hardware',this)">🔧 Hardware</button>
+      <button class="filter-btn" onclick="filterCat('iot',this)">📡 IoT</button>
+      <button class="filter-btn" onclick="filterCat('service',this)">🤝 Services</button>
+      <button class="filter-btn" onclick="filterCat('bundle',this)">📦 Bundles</button>
+    </div>
+  </div>
+</div>
+
+<!-- ─── SOCIAL SHARE BAR ─── -->
+<div class="container-xl" style="position:relative;z-index:1;">
+  <div class="share-bar">
+    <p>📣 Share this catalogue:</p>
+    <a class="share-pill sp-wa" href="https://wa.me/?text=Check%20out%20Acculekhaa%20AI%20Campus%20Management%20Products%20%F0%9F%9A%80%20https%3A%2F%2Fwww.acculekhaa.com%2Fcatalogue" target="_blank">
+      <i class="bi bi-whatsapp"></i> WhatsApp
+    </a>
+    <a class="share-pill sp-fb" href="https://www.facebook.com/sharer/sharer.php?u=https://www.acculekhaa.com/catalogue" target="_blank">
+      <i class="bi bi-facebook"></i> Facebook
+    </a>
+    <a class="share-pill sp-tw" href="https://twitter.com/intent/tweet?text=AI+Campus+Management+Solutions&url=https://www.acculekhaa.com/catalogue" target="_blank">
+      <i class="bi bi-twitter-x"></i> Twitter
+    </a>
+    <a class="share-pill sp-li" href="https://www.linkedin.com/shareArticle?mini=true&url=https://www.acculekhaa.com/catalogue" target="_blank">
+      <i class="bi bi-linkedin"></i> LinkedIn
+    </a>
+    <button class="share-pill sp-copy" onclick="copyShareLink()"><i class="bi bi-link-45deg"></i> Copy Link</button>
+  </div>
+</div>
+
+<!-- ─── PRODUCT GRID ─── -->
+<div class="container-xl pb-5" style="position:relative;z-index:1;" id="catalogueMain">
+
+  <!-- Unified PRODUCT GRID: all product cards render into one grid (groups removed) -->
+  <div class="row g-3 mb-5" id="product-grid">
+    <!-- All product cards will be rendered here (combined categories) -->
+  </div><!-- end row -->
+
+  <!-- INTEGRATION BADGES -->
+  <div class="mt-2 mb-3">
+    <div class="integration-badges">
+      <div class="int-badge"><i class="bi bi-truck"></i> Shiprocket Integrated</div>
+      <div class="int-badge"><i class="bi bi-credit-card"></i> Razorpay / PayU</div>
+      <div class="int-badge"><i class="bi bi-cash-coin"></i> Cash on Delivery</div>
+      <div class="int-badge"><i class="bi bi-receipt"></i> GST Billing</div>
+      <div class="int-badge"><i class="bi bi-whatsapp"></i> WhatsApp CRM</div>
+      <div class="int-badge"><i class="bi bi-shield-lock"></i> OTP Secured</div>
+    </div>
+  </div>
+
+  <!-- REPORTS SECTION (hidden unless admin) -->
+  <div id="reportsSection" class="hidden">
+    <div class="reports-panel">
+      <div class="d-flex align-items-center justify-content-between mb-16">
+        <div class="section-label mb-0">📊 Reports & Queries</div>
+      </div>
+      <div class="reports-tab mb-3">
+        <button class="report-tab-btn active" onclick="showReport('orders',this)">📋 Orders</button>
+        <button class="report-tab-btn" onclick="showReport('inquiries',this)">💬 Inquiries</button>
+        <button class="report-tab-btn" onclick="showReport('customers',this)">👥 Customers</button>
+        <button class="report-tab-btn" onclick="showReport('gst',this)">🧾 GST Summary</button>
+      </div>
+      <div id="reportContent"></div>
+    </div>
+  </div>
+
+</div><!-- end container -->
+
+<!-- ─── CART SIDEBAR ─── -->
+<div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
+<div class="cart-sidebar" id="cartSidebar">
+  <div class="cart-head">
+    <h2>🛒 Your Cart</h2>
+    <button class="close-cart" onclick="toggleCart()">✕</button>
+  </div>
+  <div class="cart-items" id="cartItems">
+    <div class="cart-empty" id="cartEmpty">
+      <div class="ce-icon">🛒</div>
+      <p>Your cart is empty</p>
+      <small style="color:var(--text-muted)">Add products to get started</small>
+    </div>
+  </div>
+  <div class="cart-footer" id="cartFooter" style="display:none">
+    <div class="cart-total-row">
+      <span class="cart-total-label">Subtotal (excl. GST)</span>
+      <span class="cart-total-val" id="cartTotal">₹0</span>
+    </div>
+    <div class="gst-row" id="cartGSTRow">GST (18%) will be added at checkout</div>
+    <button class="btn-checkout" onclick="openCheckout()">Proceed to Checkout →</button>
+    <div class="payment-icons">
+      <span class="pay-icon">Razorpay</span>
+      <span class="pay-icon">PayU</span>
+      <span class="pay-icon">UPI</span>
+      <span class="pay-icon">COD</span>
+    </div>
+  </div>
+</div>
+
+<!-- ─── PRODUCT DETAIL MODAL ─── -->
+<div class="detail-modal" id="detailModal">
+  <div class="detail-box" style="position:relative;">
+    <button class="detail-close" onclick="closeDetail()">✕</button>
+
+    <!-- Gallery -->
+    <div class="gallery-main" id="galleryMain">
+      <div class="gallery-icon" id="galleryIcon">📦</div>
+    </div>
+    <div class="gallery-thumbs" id="galleryThumbs"></div>
+
+    <!-- Body -->
+    <div class="det-body">
+      <div class="row g-4">
+        <div class="col-lg-7">
+          <div class="det-badge" id="detBadge">Category</div>
+          <div class="det-title" id="detTitle">Product Title</div>
+          <div class="det-desc" id="detDesc">Description</div>
+
+          <!-- Video -->
+          <div id="detVideoWrap" class="hidden">
+            <div class="section-head">📹 Product Demo</div>
+            <div class="video-wrap" id="detVideo"></div>
+          </div>
+
+          <!-- Specs -->
+          <div class="section-head mt-3">📋 Specifications</div>
+          <table class="spec-table" id="detSpecs"></table>
+
+          <!-- Features -->
+          <div class="section-head mt-3">✨ Key Features</div>
+          <ul class="feat-check" id="detFeatures"></ul>
+        </div>
+        <div class="col-lg-5">
+          <!-- Pricing -->
+          <div style="background:var(--dark3);border:1px solid var(--border);border-radius:16px;padding:20px;margin-bottom:16px;">
+            <div class="det-price" id="detPrice">₹0</div>
+            <div id="detOrigPrice" style="margin-top:4px;"></div>
+            <div class="gst-note" id="detGstNote">+ 18% GST applicable</div>
+            <div id="detOffer" class="hidden" style="background:rgba(231,76,60,.1);border:1px solid rgba(231,76,60,.3);border-radius:8px;padding:6px 12px;font-size:.78rem;color:#e74c3c;margin-bottom:12px;"></div>
+
+            <div class="d-flex gap-2 flex-wrap mt-3">
+              <button class="btn-det-add" id="detAddBtn" onclick="">+ Add to Cart</button>
+              <button class="btn-inquiry" onclick="openInquiry(currentProduct)" style="flex:1">💬 Send Inquiry</button>
+            </div>
+            <div style="margin-top:10px;font-size:.75rem;color:var(--text-muted);">
+              <i class="bi bi-truck me-1"></i> ShipRocket Delivery &nbsp;|&nbsp;
+              <i class="bi bi-shield-check me-1"></i> Secure Payment
+            </div>
+          </div>
+
+          <!-- Shipping estimate -->
+          <div style="background:var(--dark3);border:1px solid var(--border);border-radius:14px;padding:14px;">
+            <div class="section-head" style="margin-bottom:8px;">🚚 Delivery Info</div>
+            <p style="font-size:.8rem;color:var(--text-muted);margin:0;">Enter pincode to check delivery date</p>
+            <div class="d-flex gap-2 mt-2">
+              <input type="text" class="form-inp" style="margin:0;flex:1;" placeholder="Pincode" id="pincodeInput" maxlength="6">
+              <button class="btn-otp" onclick="checkDelivery()">Check</button>
+            </div>
+            <div id="deliveryResult" style="font-size:.78rem;color:var(--green-light);margin-top:6px;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── INQUIRY MODAL ─── -->
+<div class="inquiry-modal" id="inquiryModal">
+  <div class="inquiry-box">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
+      <div class="modal-title">💬 Send Inquiry</div>
+      <button class="close-cart" onclick="closeInquiry()">✕</button>
+    </div>
+    <div id="inquiryProductName" style="font-size:.85rem;color:var(--green-light);margin-bottom:16px;"></div>
+
+    <label class="form-label">Your Name *</label>
+    <input class="form-inp" id="iqName" placeholder="Full Name">
+
+    <label class="form-label">Mobile Number *</label>
+    <input class="form-inp" id="iqPhone" placeholder="+91 XXXXX XXXXX" type="tel">
+
+    <label class="form-label">City / State</label>
+    <input class="form-inp" id="iqCity" placeholder="Hyderabad, Telangana">
+
+    <label class="form-label">Message</label>
+    <textarea class="form-inp" id="iqMessage" placeholder="Tell us about your requirements..." rows="3" style="resize:vertical;"></textarea>
+
+    <button class="btn-place" onclick="submitInquiry()">📲 Send via WhatsApp & CRM</button>
+    <button class="btn-cancel-modal" onclick="closeInquiry()">Cancel</button>
+  </div>
+</div>
+
+<!-- ─── CHECKOUT MODAL ─── -->
+<div class="modal-overlay" id="checkoutModal">
+  <div class="modal-box">
+
+    <div id="checkoutForm">
+      <div class="modal-title">🛒 Checkout</div>
+      <p style="font-size:.82rem;color:var(--text-muted);margin-bottom:20px;" id="checkoutSummaryText"></p>
+
+      <!-- Order Summary -->
+      <div style="background:var(--dark3);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:18px;" id="orderSummaryBlock"></div>
+
+      <div class="row g-2">
+        <div class="col-sm-6">
+          <label class="form-label">First Name *</label>
+          <input class="form-inp" id="firstName" placeholder="Ramesh">
+        </div>
+        <div class="col-sm-6">
+          <label class="form-label">Last Name</label>
+          <input class="form-inp" id="lastName" placeholder="Kumar">
+        </div>
+        <div class="col-12">
+          <label class="form-label">Organisation / Institution</label>
+          <input class="form-inp" id="institution" placeholder="Sri Chaitanya School">
+        </div>
+        <div class="col-sm-6">
+          <label class="form-label">Email *</label>
+          <input class="form-inp" id="email" placeholder="you@example.com" type="email">
+        </div>
+        <div class="col-sm-6">
+          <label class="form-label">Mobile *</label>
+          <div class="otp-row">
+            <input class="form-inp" id="phone" placeholder="+91 XXXXX XXXXX" type="tel">
+            <button class="btn-otp" id="otpBtn" onclick="sendOTP()">Get OTP</button>
+          </div>
+        </div>
+        <div class="col-12" id="otpField" style="display:none">
+          <label class="form-label">Enter OTP *</label>
+          <input class="form-inp" id="otpInput" placeholder="6-digit OTP" maxlength="6">
+        </div>
+        <div class="col-12">
+          <label class="form-label">Delivery Address *</label>
+          <textarea class="form-inp" id="address" placeholder="Full address with pincode" rows="2" style="resize:vertical;"></textarea>
+        </div>
+        <div class="col-sm-6">
+          <label class="form-label">State</label>
+          <select class="form-inp" id="state">
+            <option value="">Select State</option>
+            <option>Telangana</option><option>Andhra Pradesh</option><option>Karnataka</option>
+            <option>Tamil Nadu</option><option>Maharashtra</option><option>Delhi</option>
+            <option>Gujarat</option><option>Rajasthan</option><option>West Bengal</option>
+            <option>Uttar Pradesh</option><option>Other</option>
+          </select>
+        </div>
+        <div class="col-sm-6">
+          <label class="form-label">GSTIN (optional)</label>
+          <input class="form-inp" id="gstin" placeholder="22AAAAA0000A1Z5">
+        </div>
+        <div class="col-12">
+          <label class="form-label">Payment Method</label>
+          <div class="tab-row">
+            <button class="tab-btn active" onclick="selectPayment('online',this)">💳 Online Payment</button>
+            <button class="tab-btn" onclick="selectPayment('cod',this)">💵 Cash on Delivery</button>
+          </div>
+        </div>
+        <div class="col-12" id="onlinePayNote">
+          <div style="background:var(--dark3);border:1px solid var(--border);border-radius:10px;padding:12px;font-size:.8rem;color:var(--text-muted);">
+            <i class="bi bi-shield-lock text-green me-1"></i> Secure payment via <strong>Razorpay</strong> or <strong>PayU</strong>. UPI · Cards · Net Banking accepted.
+          </div>
+        </div>
+        <div class="col-12" id="codNote" style="display:none">
+          <div style="background:rgba(245,166,35,.08);border:1px solid rgba(245,166,35,.25);border-radius:10px;padding:12px;font-size:.8rem;color:var(--gold);">
+            💵 Cash on Delivery available for orders. Our team will confirm before dispatch.
+          </div>
+        </div>
+      </div>
+
+      <!-- GST Bill Preview -->
+      <div class="gst-bill-preview mt-3" id="gstPreview">
+        <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:.9rem;margin-bottom:10px;">🧾 Bill Preview (GST Invoice)</div>
+        <div id="gstLineItems"></div>
+      </div>
+
+      <button class="btn-place" onclick="placeOrder()">✅ Place Order</button>
+      <button class="btn-cancel-modal" onclick="closeCheckout()">Cancel</button>
+    </div>
+
+    <div id="orderSuccess" style="display:none;" class="success-screen text-center">
+      <div class="success-icon">✓</div>
+      <h2>Order Placed!</h2>
+      <p style="color:var(--text-muted);font-size:.88rem;">Thank you! Your order has been confirmed. You'll receive an SMS & WhatsApp confirmation shortly.</p>
+      <div class="gst-bill-preview" id="finalGstBill" style="text-align:left;"></div>
+      <button class="btn-place" onclick="closeCheckout()" style="margin-top:16px;">Back to Catalogue</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ─── LOGIN MODAL ─── -->
+<div class="login-modal" id="loginModal">
+  <div class="login-box">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
+      <div class="modal-title">🔐 Login</div>
+      <button class="close-cart" onclick="closeLoginModal()">✕</button>
+    </div>
+    <div class="login-tabs">
+      <button class="login-tab active" onclick="setLoginMode('user',this)">👤 Customer</button>
+      <button class="login-tab" onclick="setLoginMode('admin',this)">🛡️ Admin</button>
+    </div>
+    <div id="loginFormArea">
+      <label class="form-label">Mobile Number</label>
+      <div class="otp-row mb-3">
+        <input class="form-inp" id="loginPhone" placeholder="+91 XXXXX XXXXX" type="tel" style="margin:0;">
+        <button class="btn-otp" onclick="loginSendOTP()">Get OTP</button>
+      </div>
+      <div id="loginOtpRow" style="display:none;">
+        <label class="form-label">Enter OTP</label>
+        <input class="form-inp" id="loginOtp" placeholder="6-digit OTP" maxlength="6">
+      </div>
+    </div>
+    <div id="adminLoginArea" style="display:none;">
+      <label class="form-label">Admin Username</label>
+      <input class="form-inp" id="adminUser" placeholder="admin@acculekhaa.com">
+      <label class="form-label">Password</label>
+      <input class="form-inp" id="adminPass" placeholder="••••••••" type="password">
+    </div>
+    <button class="btn-place" onclick="doLogin()">Login →</button>
+    <button class="btn-cancel-modal" onclick="closeLoginModal()">Cancel</button>
+  </div>
+</div>
+
+<!-- ─── ADMIN PANEL ─── -->
+<div class="admin-panel" id="adminPanel">
+  <div class="admin-box">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+      <div class="modal-title">🛡️ Admin — Manage Products</div>
+      <button class="close-cart" onclick="closeAdminPanel()">✕</button>
+    </div>
+    <p style="font-size:.82rem;color:var(--text-muted);margin-bottom:16px;">Toggle features, enable/disable products, mark out-of-stock, edit prices.</p>
+    <div id="adminProductList"></div>
+  </div>
+</div>
+
+<!-- WhatsApp Float -->
+<a class="wa-float" href="https://api.whatsapp.com/send?phone=919032406513&text=Hi%20Acculekhaa%20Team%21" target="_blank" rel="noopener" title="Chat on WhatsApp" aria-label="Chat on WhatsApp">
+  <i class="bi bi-whatsapp"></i>
+</a>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+/* ═══════════════════════════════════════════
+   ACCULEKHAA CATALOGUE — FULL FEATURE ENGINE
+   ═══════════════════════════════════════════ */
+
+/* ─── INTRO LOADER (VIDEO OVERLAY) ─── */
+function hideIntroLoader() {
+  const overlay = document.getElementById('introLoader');
+  const v = document.getElementById('introLoaderVideo');
+  if (!overlay) return;
+  overlay.classList.add('hidden');
+  setTimeout(function() {
+    overlay.remove();
+    try { if (v) v.pause(); } catch (_) {}
+  }, 450);
+}
+window.addEventListener('DOMContentLoaded', function() {
+  var overlay = document.getElementById('introLoader');
+  var v = document.getElementById('introLoaderVideo');
+  if (!overlay || !v) { if (overlay) hideIntroLoader(); return; }
+  v.muted = true;
+  v.defaultMuted = true;
+  v.playbackRate = 3.0;
+  var p = v.play();
+  if (p && typeof p.catch === 'function') p.catch(function() {});
+  v.addEventListener('ended', hideIntroLoader, { once: true });
+  v.addEventListener('error', hideIntroLoader, { once: true });
+  // Skip intro from any interaction on the overlay (mouse/touch/pen)
+  overlay.addEventListener('pointerdown', hideIntroLoader, { once: true });
+  overlay.addEventListener('click', hideIntroLoader, { once: true });
+  overlay.addEventListener('touchstart', hideIntroLoader, { once: true, passive: true });
+  // Close intro loader immediately when Escape is pressed
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' || e.key === 'Esc') {
+      if (document.getElementById('introLoader')) hideIntroLoader();
+    }
+  });
+  setTimeout(function() {
+    if (document.getElementById('introLoader')) hideIntroLoader();
+  }, 8000);
+});
+
+/* ─── PRODUCT DATA STORE ─── */
+let PRODUCTS = [
+  // SOFTWARE
+  {
+    id:'att', cat:'software', icon:'📋', name:'Attendance Management System',
+    desc:'Cloud-based attendance system with GEO tracking, mobile app, instant SMS alerts, and auto-reporting.',
+    price:15000, origPrice:18000, unit:'year', gstRate:18,
+    features:['GEO-based attendance','Mobile app (iOS & Android)','Instant SMS alerts','Real-time reports','Biometric integration ready','Leave management'],
+    specs:[['Platform','Cloud / SaaS'],['Mobile App','Android & iOS'],['Integration','Biometric, HR'],['Data Storage','AWS Cloud'],['Uptime SLA','99.9%']],
+    tags:['Cloud','Mobile App','GEO Track','SMS Alerts'],
+    images:[], videoUrl:'',
+    enabled:true, inStock:true, isNew:false, offer:'17% OFF – Launch Offer'
+  },
+  {
+    id:'pay', cat:'software', icon:'💰', name:'Payroll & HRMS',
+    desc:'Complete payroll processing, HR management, salary disbursement automation and statutory compliance.',
+    price:12000, origPrice:0, unit:'year', gstRate:18,
+    features:['Auto payslip generation','PF, ESI, TDS compliance','Leave & attendance sync','Bank integration','Employee self-service portal','Loan & advance management'],
+    specs:[['Users','Unlimited'],['Compliance','PF, ESI, PT, TDS'],['Reports','50+ reports'],['Format','Excel, PDF export']],
+    tags:['Payroll','Leave Mgmt','Compliance','HRMS'],
+    images:[], videoUrl:'',
+    enabled:true, inStock:true, isNew:false, offer:''
+  },
+  {
+    id:'acc', cat:'software', icon:'📊', name:'Accounting & Inventory',
+    desc:'Integrated GST-ready accounting, inventory tracking and financial management for educational institutions.',
+    price:10000, origPrice:0, unit:'year', gstRate:18,
+    features:['GST billing & returns','Double-entry ledger','Inventory alerts','Purchase & sales orders','Bank reconciliation','Multi-branch support'],
+    specs:[['GST Compliant','Yes – GSTIN integration'],['Returns','GSTR-1, 3B, 9'],['Inventory','Real-time stock'],['Banks','100+ banks supported']],
+    tags:['Ledger','Inventory','GST Ready'],
+    images:[], videoUrl:'',
+    enabled:true, inStock:true, isNew:false, offer:''
+  },
+  {
+    id:'bgv', cat:'software', icon:'🔍', name:'Background Verification Software',
+    desc:'Automated background verification and screening system for staff & student onboarding with API integrations.',
+    price:8000, origPrice:0, unit:'year', gstRate:18,
+    features:['Auto verification pipeline','Criminal record check','Education verification','Employment history','Govt. ID verification','API ready'],
+    specs:[['Verification Types','6+ categories'],['Turnaround','24-72 hours'],['Reports','PDF + Portal'],['API','REST API available']],
+    tags:['Auto Verify','Reports','API Ready'],
+    images:[], videoUrl:'',
+    enabled:true, inStock:true, isNew:false, offer:''
+  },
+  {
+    id:'lms', cat:'software', icon:'📚', name:'Learning Management System (LMS)',
+    desc:'Full-featured LMS with online classes, assessments, progress tracking and parent portal.',
+    price:20000, origPrice:25000, unit:'year', gstRate:18,
+    features:['Live & recorded classes','Assignments & quizzes','Student progress tracking','Parent portal access','Certificate generation','Mobile learning app'],
+    specs:[['Students','Up to 5,000'],['Storage','100 GB video'],['Live Classes','Zoom / Meet integration'],['Mobile App','Yes']],
+    tags:['E-Learning','Live Classes','Assessments'],
+    images:[], videoUrl:'',
+    enabled:true, inStock:true, isNew:true, offer:'20% OFF'
+  },
+  {
+    id:'fee', cat:'software', icon:'💳', name:'Fee Management System',
+    desc:'Online fee collection with UPI, cards, installment plans, auto reminders and GST receipts.',
+    price:9000, origPrice:0, unit:'year', gstRate:18,
+    features:['Online & offline fee collection','Auto reminders (SMS/WhatsApp)','Installment plans','GST receipts','Fee defaulter reports','Concession management'],
+    specs:[['Payment Modes','UPI, Card, Net Banking, Cash'],['GST Receipt','Automated'],['Reminders','SMS + WhatsApp'],['Reports','Real-time']],
+    tags:['Online Fees','UPI','GST Receipt','Reminders'],
+    images:[], videoUrl:'',
+    enabled:true, inStock:true, isNew:false, offer:''
+  },
+  // HARDWARE
+  {
+    id:'bio', cat:'hardware', icon:'🤖', name:'AI Facial Recognition Biometric',
+    desc:'Recognizes 5 faces simultaneously with 3-meter range. RF card + PIN access with instant SMS notifications.',
+    price:45000, origPrice:52000, unit:'unit', gstRate:18,
+    features:['5-face simultaneous recognition','3-metre recognition range','RF card & PIN support','Instant SMS alerts','TCP/IP & WiFi connectivity','IP65 weatherproof'],
+    specs:[['Recognition','5 simultaneous faces'],['Range','Up to 3 metres'],['Connectivity','TCP/IP, WiFi, RS485'],['Storage','Up to 10,000 faces'],['Weather Rating','IP65']],
+    tags:['5-Face Sim.','3m Range','RF Card','WiFi'],
+    images:[], videoUrl:'',
+    enabled:true, inStock:true, isNew:true, offer:'13% OFF'
+  },
+  {
+    id:'acc2', cat:'hardware', icon:'🔐', name:'Access Control System',
+    desc:'Smart door access control with biometric and card-based authentication for secure campus entry points.',
+    price:18000, origPrice:0, unit:'door', gstRate:18,
+    features:['Biometric + card access','Audit log','Remote management','Fail-safe/fail-secure','Anti-passback','Integration with attendance'],
+    specs:[['Access Modes','Fingerprint, Card, PIN'],['Doors','Single / Multi door'],['Users','Up to 10,000'],['Log','100,000 events']],
+    tags:['Card Based','Biometric','Audit Log'],
+    images:[], videoUrl:'',
+    enabled:true, inStock:true, isNew:false, offer:''
+  },
+  {
+    id:'cctv', cat:'hardware', icon:'📷', name:'AI CCTV Surveillance',
+    desc:'4K IP cameras with AI object detection, cloud recording, night vision and mobile remote viewing.',
+    price:8500, origPrice:0, unit:'camera', gstRate:18,
+    features:['4K resolution','AI object & motion detection','Night vision (40m)','Cloud + local recording','Mobile app viewing','Weather resistant IP66'],
+    specs:[['Resolution','4K / 8MP'],['Night Vision','40 metres'],['Recording','Cloud + NVR'],['Power','PoE'],['Rating','IP66']],
+    tags:['4K','AI Detection','Night Vision','Cloud'],
+    images:[], videoUrl:'',
+    enabled:true, inStock:true, isNew:false, offer:''
+  },
+  {
+    id:'panic', cat:'hardware', icon:'🚨', name:'Panic Button / Emergency Alert',
+    desc:'Wireless panic buttons for campus safety with instant SMS & siren alerts to security personnel.',
+    price:3500, origPrice:0, unit:'unit', gstRate:18,
+    features:['One-press emergency alert','Wireless range 100m','SMS + siren notification','Location tagging','Battery backup 1 year','Tamper-proof design'],
+    specs:[['Range','100 metres'],['Alert Modes','SMS, Siren, App'],['Battery','1+ year'],['Waterproof','Yes']],
+    tags:['Safety','Emergency','SMS Alert'],
+    images:[], videoUrl:'',
+    enabled:true, inStock:true, isNew:false, offer:''
+  },
+  // IOT
+  {
+    id:'smart', cat:'iot', icon:'📡', name:'Smart Campus IoT Hub',
+    desc:'Central IoT hub connecting all campus devices – energy, lighting, HVAC controls with real-time dashboard.',
+    price:35000, origPrice:40000, unit:'site', gstRate:18,
+    features:['Central device management','Energy monitoring','Smart lighting control','HVAC automation','Real-time dashboard','Mobile alerts'],
+    specs:[['Devices','Up to 200 endpoints'],['Protocol','MQTT, HTTP, Zigbee'],['Dashboard','Web + Mobile'],['Energy Saving','Up to 30%']],
+    tags:['IoT','Energy','Automation','Dashboard'],
+    images:[], videoUrl:'',
+    enabled:true, inStock:true, isNew:true, offer:'12% OFF'
+  },
+  {
+    id:'gps', cat:'iot', icon:'🚌', name:'GPS Vehicle Tracking',
+    desc:'Real-time GPS tracking for school buses with live location, parent SMS alerts and route optimization.',
+    price:4500, origPrice:0, unit:'vehicle/year', gstRate:18,
+    features:['Real-time GPS tracking','Parent SMS / app alerts','Route replay','Speed alerts','Driver behavior analysis','Fuel monitoring'],
+    specs:[['Accuracy','± 3 metres'],['Update Interval','Every 10 seconds'],['History','90 days'],['Parent App','Yes']],
+    tags:['GPS','Real-time','Parent App','Bus Safety'],
+    images:[], videoUrl:'',
+    enabled:true, inStock:true, isNew:false, offer:''
+  },
+  // SERVICES
+  {
+    id:'amc', cat:'service', icon:'🔧', name:'Annual Maintenance Contract (AMC)',
+    desc:'Comprehensive hardware & software maintenance with priority support, onsite visits and SLA guarantee.',
+    price:5000, origPrice:0, unit:'device/year', gstRate:18,
+    features:['Priority support hotline','Quarterly onsite visits','Remote diagnostics','Parts replacement coverage','24-hr response SLA','Software updates included'],
+    specs:[['Response Time','< 24 hours'],['Visits','Quarterly'],['Support','Phone, Remote, Onsite'],['SLA','99% uptime guarantee']],
+    tags:['Priority Support','SLA','Onsite Visits'],
+    images:[], videoUrl:'',
+    enabled:true, inStock:true, isNew:false, offer:''
+  },
+  {
+    id:'train', cat:'service', icon:'🎓', name:'Staff Training Program',
+    desc:'Hands-on training for admin & IT staff on all Acculekhaa products, with certification.',
+    price:3000, origPrice:4500, unit:'person', gstRate:18,
+    features:['Online + offline sessions','Hands-on practice','Acculekhaa certification','Training materials','Recorded sessions access','Refresher courses'],
+    specs:[['Duration','2 days'],['Mode','Online / Offline'],['Certification','Yes'],['Participants','Up to 30 per batch']],
+    tags:['Training','Certification','Hands-on'],
+    images:[], videoUrl:'',
+    enabled:true, inStock:true, isNew:false, offer:'33% OFF'
+  },
+  {
+    id:'impl', cat:'service', icon:'⚙️', name:'Implementation & Setup',
+    desc:'End-to-end implementation service – data migration, configuration, go-live support and staff onboarding.',
+    price:12000, origPrice:0, unit:'project', gstRate:18,
+    features:['Requirement analysis','Data migration','System configuration','Go-live support','Staff onboarding','Post-launch 30-day support'],
+    specs:[['Timeline','5-15 working days'],['Support','Dedicated manager'],['Data Migration','Free'],['Training','Included']],
+    tags:['Setup','Data Migration','Go-live'],
+    images:[], videoUrl:'',
+    enabled:true, inStock:true, isNew:false, offer:''
+  },
+  // BUNDLES
+  {
+    id:'bundle1', cat:'bundle', icon:'📦', name:'Campus Starter Pack',
+    desc:'Attendance + Fee + Payroll + 1 AI Biometric Device. Perfect for small-medium institutions.',
+    price:45000, origPrice:60000, unit:'year', gstRate:18,
+    features:['Attendance Management','Fee Management','Payroll & HRMS','1× AI Facial Recognition Biometric','Free Implementation','Priority Support'],
+    specs:[['Savings','₹15,000 (25% OFF)'],['Modules','3 Software + 1 Hardware'],['Implementation','Free'],['Support','1 year priority']],
+    tags:['Bundle','Best Value','Save 25%'],
+    images:[], videoUrl:'',
+    enabled:true, inStock:true, isNew:true, offer:'Save ₹15,000 – 25% OFF'
+  },
+  {
+    id:'bundle2', cat:'bundle', icon:'🚀', name:'Enterprise Full Suite',
+    desc:'All 6 software modules + 2 Biometrics + CCTV + GPS Tracking + AMC + Training. Complete campus solution.',
+    price:135000, origPrice:185000, unit:'year', gstRate:18,
+    features:['All 6 software modules','2× AI Facial Biometric devices','4× CCTV cameras','GPS tracking (5 vehicles)','1-year AMC included','Staff training for 10 persons','Dedicated account manager'],
+    specs:[['Savings','₹50,000 (27% OFF)'],['Modules','All 6 Software','2 Biometric','4 CCTV'],['AMC','1 year free'],['Training','10 staff free']],
+    tags:['Enterprise','All-in-One','Best Deal','Save 27%'],
+    images:[], videoUrl:'',
+    enabled:true, inStock:true, isNew:true, offer:'Save ₹50,000 – Best Deal!'
+  }
+];
+
+const DEMO_MEDIA = {
+  images: [
+    'Assets/0cbd8a8c46.webp',
+    'Assets/11-9d78 (1).webp',
+    'Assets/11-9d78.webp',
+    'Assets/14-a4ab.webp',
+    'Assets/2bd83b4470.webp',
+    'Assets/79cd5a81ae (1).webp',
+    'Assets/79cd5a81ae.webp',
+    'Assets/7e68e5abc8.webp',
+    'Assets/9c24bdde28.webp',
+    'Assets/ad0ca52469.webp',
+    'Assets/b8114f8abc.webp',
+    'Assets/c97f86bdbd.webp',
+    'Assets/fca57c42d9.webp'
+  ],
+  video: 'Assets/Video Project 2.mp4'
+};
+
+function hashSeed(str) {
+  let h = 2166136261;
+  for (let i = 0; i < str.length; i++) {
+    h ^= str.charCodeAt(i);
+    h += (h << 1) + (h << 4) + (h << 7) + (h << 8) + (h << 24);
+  }
+  return h >>> 0;
+}
+
+function getProductMedia(product) {
+  const base = DEMO_MEDIA.images;
+  const seed = hashSeed(String(product.id || product.name || 'product'));
+  const images = Array.from({ length: 4 }, (_, i) => base[(seed + i) % base.length]);
+  const videoUrl = (typeof product.videoUrl === 'string' && product.videoUrl.trim()) ? product.videoUrl.trim() : DEMO_MEDIA.video;
+  const items = images.map(src => ({ type: 'image', src }));
+  if (videoUrl) items.push({ type: 'video', src: videoUrl });
+  return { images, videoUrl, items };
+}
+
+/* ─── STATE ─── */
+let cart = [];
+let currentProduct = null;
+let currentDetailMedia = [];
+let currentDetailMediaIndex = 0;
+let cardSwipeStartX = 0;
+let detailSwipeStartX = 0;
+let swipeSuppressUntil = {};
+let cardAutoTimers = {};
+let cardAutoPauseUntil = {};
+let cardVisibilityObserver = null;
+let cardVisibilityMap = {};
+let isAdmin = false;
+let currentUser = null;
+let loginMode = 'user';
+let paymentMethod = 'online';
+let mockOTP = '';
+let loginMockOTP = '';
+let orders = [];
+let inquiries = [];
+
+/* ─── RENDER ALL PRODUCTS ─── */
+function renderAllProducts() {
+  Object.values(cardAutoTimers).forEach(clearTimeout);
+  cardAutoTimers = {};
+  cardVisibilityMap = {};
+  if (cardVisibilityObserver) cardVisibilityObserver.disconnect();
+  cardVisibilityObserver = createCardVisibilityObserver();
+
+  const grids = { software:'product-grid', hardware:'product-grid', iot:'product-grid', service:'product-grid', bundle:'product-grid' };
+  Object.values(grids).forEach(gid => document.getElementById(gid).innerHTML = '');
+
+  PRODUCTS.forEach((p, idx) => {
+    if (!p.enabled && !isAdmin) return;
+    const gid = grids[p.cat] || 'product-grid';
+    const grid = document.getElementById(gid);
+    if (!grid) return;
+    const media = getProductMedia(p);
+    const mediaSlides = media.items.map((m, midx) =>
+      m.type === 'video'
+        ? `<div class="card-media-slide ${midx === 0 ? 'active' : ''}"><div class="card-video-thumb" onclick="event.stopPropagation();playCardPreviewVideo(this.querySelector('video'),'${p.id}')"><video src="${m.src}" muted playsinline preload="metadata"></video><i class="bi bi-play-fill"></i></div></div>`
+        : `<div class="card-media-slide ${midx === 0 ? 'active' : ''}"><img src="${m.src}" alt="${p.name} media ${midx + 1}" loading="lazy"></div>`
+    ).join('');
+    const mediaDots = media.items.map((m, midx) =>
+      `<button type="button" class="img-dot ${midx === 0 ? 'active' : ''} ${m.type === 'video' ? 'video-dot' : ''}" onclick="event.stopPropagation();setCardMedia('${p.id}',${midx},true)"></button>`
+    ).join('');
+    const discPct = p.origPrice > 0 ? Math.round((1 - p.price / p.origPrice) * 100) : 0;
+    const col = document.createElement('div');
+    col.className = 'col-12 col-sm-6 col-lg-4 product-card-wrap';
+    col.dataset.category = p.cat;
+    col.dataset.search = (p.name + ' ' + p.desc + ' ' + p.tags.join(' ')).toLowerCase();
+    col.innerHTML = `
+      <div class="product-card h-100 ${!p.enabled ? 'opacity-50' : ''}" onclick="openDetail('${p.id}')">
+        <div class="card-header-img" data-pid="${p.id}" ontouchstart="cardTouchStart(event,'${p.id}')" ontouchend="cardTouchEnd(event,'${p.id}')">
+          <div class="card-media-track" id="card-track-${p.id}" data-index="0">${mediaSlides}</div>
+          <div class="card-bg-glow" style="background:linear-gradient(135deg,#1a7a3c,#1a5276)"></div>
+          ${media.items.length > 1 ? '<button class="card-media-nav prev" type="button" onclick="event.stopPropagation();shiftCardMedia(\'' + p.id + '\',-1,true)">‹</button><button class="card-media-nav next" type="button" onclick="event.stopPropagation();shiftCardMedia(\'' + p.id + '\',1,true)">›</button>' : ''}
+          <div class="img-dots" id="card-dots-${p.id}">${mediaDots}</div>
+          <span class="badge-cat">${p.cat.charAt(0).toUpperCase()+p.cat.slice(1)}</span>
+          ${p.isNew && p.inStock ? '<span class="badge-new">NEW</span>' : ''}
+          ${!p.inStock ? '<span class="badge-outofstock">Out of Stock</span>' : ''}
+          ${p.offer && p.inStock ? `<span class="badge-offer">${p.offer}</span>` : ''}
+          ${!p.enabled ? '<span class="badge-outofstock" style="top:auto;bottom:10px;right:10px;">Disabled</span>' : ''}
+        </div>
+        <div class="card-body-inner d-flex flex-column h-100">
+          <div class="card-title">${p.name}</div>
+          <p class="card-desc">${p.desc}</p>
+          <div class="feat-tags">${p.tags.slice(0,3).map(t => `<span class="feat-tag">${t}</span>`).join('')}</div>
+          <div class="mt-auto">
+            <div class="card-price-row">
+              <div class="card-price">₹${p.price.toLocaleString('en-IN')} <small>/ ${p.unit}</small></div>
+              ${discPct > 0 ? `<span class="price-original">₹${p.origPrice.toLocaleString('en-IN')}</span><span class="price-discount">-${discPct}%</span>` : ''}
+            </div>
+            <div class="gst-note">+ ${p.gstRate}% GST</div>
+            <div class="d-flex align-items-center gap-2 flex-wrap">
+              <button class="btn-learn" onclick="event.stopPropagation();openDetail('${p.id}')">View →</button>
+              <button class="btn-inquiry" onclick="event.stopPropagation();openInquiry('${p.id}')">💬</button>
+              ${p.inStock && p.enabled
+                ? `<button class="btn-add-card" id="addbtn-${p.id}" onclick="event.stopPropagation();cardAdd(this,'${p.id}')">+ Add</button>
+                   <div class="card-stepper" id="stepper-${p.id}">
+                     <button class="cs-btn" onclick="event.stopPropagation();cardDec(this,'${p.id}')">−</button>
+                     <span class="cs-num">1</span>
+                     <button class="cs-btn" onclick="event.stopPropagation();cardInc(this,'${p.id}')">+</button>
+                   </div>`
+                : `<button class="btn-add-card" disabled>Unavailable</button>`
+              }
+            </div>
+          </div>
+        </div>
+      </div>`;
+    grid.appendChild(col);
+    setCardMedia(p.id, 0, false);
+    const cardHeader = col.querySelector('.card-header-img');
+    if (cardHeader && cardVisibilityObserver) cardVisibilityObserver.observe(cardHeader);
+  });
+
+  updateGroupCounts();
+}
+
+function setCardMedia(id, index, userAction = false) {
+  const track = document.getElementById('card-track-' + id);
+  const dots = document.querySelectorAll('#card-dots-' + id + ' .img-dot');
+  if (!track) return;
+  const slides = track.querySelectorAll('.card-media-slide');
+  if (!slides.length) return;
+  const safe = ((index % slides.length) + slides.length) % slides.length;
+  slides.forEach((s, i) => {
+    const active = i === safe;
+    s.classList.toggle('active', active);
+    const v = s.querySelector('video');
+    if (v) {
+      v.loop = false;
+      if (active) {
+        v.play().catch(() => {});
+        v.onended = () => handleCardVideoEnded(id, v);
+      }
+      else v.pause();
+    }
+  });
+  dots.forEach((d, i) => d.classList.toggle('active', i === safe));
+  track.dataset.index = String(safe);
+  if (userAction) cardAutoPauseUntil[id] = Date.now() + 7000;
+  startCardAutoplay(id);
+}
+
+function shiftCardMedia(id, delta, userAction = false) {
+  const track = document.getElementById('card-track-' + id);
+  const current = parseInt(track?.dataset.index || '0', 10) || 0;
+  setCardMedia(id, current + delta, userAction);
+}
+
+function startCardAutoplay(id) {
+  const track = document.getElementById('card-track-' + id);
+  if (!track) return;
+  const slides = track.querySelectorAll('.card-media-slide');
+  if (slides.length < 2) return;
+  if (cardAutoTimers[id]) clearTimeout(cardAutoTimers[id]);
+  if (!cardVisibilityMap[id]) return;
+  if (Date.now() < (cardAutoPauseUntil[id] || 0) || Date.now() < (swipeSuppressUntil[id] || 0)) {
+    cardAutoTimers[id] = setTimeout(() => startCardAutoplay(id), 300);
+    return;
+  }
+  const current = parseInt(track.dataset.index || '0', 10) || 0;
+  const activeSlide = slides[current];
+  const activeVideo = activeSlide ? activeSlide.querySelector('video') : null;
+  if (activeVideo) {
+    activeVideo.play().catch(() => {});
+    return;
+  }
+  cardAutoTimers[id] = setTimeout(() => shiftCardMedia(id, 1, false), 3000);
+}
+
+function handleCardVideoEnded(id, videoEl) {
+  if (!cardVisibilityMap[id]) return;
+  if (Date.now() < (cardAutoPauseUntil[id] || 0) || Date.now() < (swipeSuppressUntil[id] || 0)) {
+    startCardAutoplay(id);
+    return;
+  }
+  const track = document.getElementById('card-track-' + id);
+  if (!track) return;
+  const activeSlide = track.querySelector('.card-media-slide.active');
+  if (!activeSlide || !videoEl || !activeSlide.contains(videoEl)) return;
+  shiftCardMedia(id, 1, false);
+}
+
+function createCardVisibilityObserver() {
+  return new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      const id = entry.target.dataset.pid;
+      if (!id) return;
+      const visible = entry.isIntersecting && entry.intersectionRatio >= 0.35;
+      cardVisibilityMap[id] = visible;
+      if (visible) {
+        startCardAutoplay(id);
+      } else {
+        if (cardAutoTimers[id]) clearTimeout(cardAutoTimers[id]);
+        const track = document.getElementById('card-track-' + id);
+        const activeVideo = track?.querySelector('.card-media-slide.active video');
+        if (activeVideo) activeVideo.pause();
+      }
+    });
+  }, { threshold: [0, 0.35, 0.6] });
+}
+
+function playCardPreviewVideo(videoEl, id) {
+  if (!videoEl) return;
+  videoEl.muted = false;
+  videoEl.controls = true;
+  videoEl.play().catch(() => {});
+  cardAutoPauseUntil[id] = Date.now() + 7000;
+  startCardAutoplay(id);
+}
+
+function cardTouchStart(e, id) {
+  const t = e.touches && e.touches[0];
+  if (!t) return;
+  cardSwipeStartX = t.clientX;
+}
+
+function cardTouchEnd(e, id) {
+  const t = e.changedTouches && e.changedTouches[0];
+  if (!t) return;
+  const dx = t.clientX - cardSwipeStartX;
+  if (Math.abs(dx) < 35) return;
+  shiftCardMedia(id, dx < 0 ? 1 : -1, true);
+  swipeSuppressUntil[id] = Date.now() + 450;
+}
+
+function updateGroupCounts() {
+  const cats = ['software','hardware','iot','service','bundle'];
+  cats.forEach(c => {
+    const count = PRODUCTS.filter(p => p.cat === c && p.enabled).length;
+    const el = document.getElementById(`grp-${c}`);
+    if (el) el.querySelector('span').textContent = `${count} Product${count!==1?'s':''}`;
+  });
+}
+
+/* ─── FILTER ─── */
+function filterCat(cat, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const mainGrid = document.getElementById('product-grid');
+  if (mainGrid) mainGrid.style.display = '';
+  document.querySelectorAll('.product-card-wrap').forEach(card => {
+    if (cat === 'all' || card.dataset.category === cat) card.style.display = '';
+    else card.style.display = 'none';
+  });
+}
+
+/* ─── CART ─── */
+function getProduct(id) { return PRODUCTS.find(p => p.id === id); }
+
+function cardAdd(btn, id) {
+  const p = getProduct(id);
+  const ex = cart.find(i => i.id === id);
+  if (ex) ex.qty++;
+  else cart.push({ id, name: p.name, icon: p.icon, price: p.price, gstRate: p.gstRate, unit: p.unit, qty: 1 });
+  const stepper = document.getElementById('stepper-' + id);
+  const numEl = stepper?.querySelector('.cs-num');
+  if (btn) btn.style.display = 'none';
+  if (stepper) stepper.classList.add('visible');
+  if (numEl) numEl.textContent = cart.find(i => i.id === id).qty;
+  updateCart();
+}
+
+function cardInc(btn, id) {
+  const ex = cart.find(i => i.id === id);
+  if (ex) ex.qty++;
+  const stepper = btn.closest('.card-stepper');
+  const numEl = stepper?.querySelector('.cs-num');
+  if (numEl) numEl.textContent = ex.qty;
+  updateCart();
+}
+
+function cardDec(btn, id) {
+  const ex = cart.find(i => i.id === id);
+  if (!ex) return;
+  ex.qty--;
+  const stepper = btn.closest('.card-stepper');
+  if (ex.qty <= 0) {
+    cart.splice(cart.indexOf(ex), 1);
+    if (stepper) stepper.classList.remove('visible');
+    const addBtn = document.getElementById('addbtn-' + id);
+    if (addBtn) addBtn.style.display = '';
+  } else {
+    const numEl = stepper?.querySelector('.cs-num');
+    if (numEl) numEl.textContent = ex.qty;
+  }
+  updateCart();
+}
+
+function changeQty(idx, delta) {
+  cart[idx].qty += delta;
+  if (cart[idx].qty <= 0) cart.splice(idx, 1);
+  updateCart();
+}
+
+function updateCart() {
+  const badge = document.getElementById('cartBadge');
+  const totalQty = cart.reduce((s, i) => s + i.qty, 0);
+  badge.textContent = totalQty;
+  const itemsEl = document.getElementById('cartItems');
+  const footerEl = document.getElementById('cartFooter');
+  const emptyEl = document.getElementById('cartEmpty');
+  itemsEl.querySelectorAll('.cart-item').forEach(e => e.remove());
+  if (!cart.length) { emptyEl.style.display = 'block'; footerEl.style.display = 'none'; return; }
+  emptyEl.style.display = 'none'; footerEl.style.display = 'block';
+  let subtotal = 0;
+  cart.forEach((item, idx) => {
+    subtotal += item.price * item.qty;
+    const d = document.createElement('div');
+    d.className = 'cart-item';
+    d.innerHTML = `<div class="ci-icon">${item.icon}</div>
+      <div class="ci-info"><div class="ci-name">${item.name}</div><div class="ci-price">₹${item.price.toLocaleString('en-IN')} / ${item.unit}</div></div>
+      <div class="ci-qty">
+        <button class="qty-btn" onclick="changeQty(${idx},-1)">−</button>
+        <span class="qty-num">${item.qty}</span>
+        <button class="qty-btn" onclick="changeQty(${idx},1)">+</button>
+      </div>`;
+    itemsEl.insertBefore(d, emptyEl);
+  });
+  document.getElementById('cartTotal').textContent = '₹' + subtotal.toLocaleString('en-IN');
+  const gst = Math.round(subtotal * 0.18);
+  document.getElementById('cartGSTRow').textContent = `+ GST (18%): ₹${gst.toLocaleString('en-IN')} | Total: ₹${(subtotal+gst).toLocaleString('en-IN')}`;
+}
+
+function toggleCart() {
+  document.getElementById('cartOverlay').classList.toggle('open');
+  document.getElementById('cartSidebar').classList.toggle('open');
+}
+
+/* ─── PRODUCT DETAIL ─── */
+function openDetail(id) {
+  if (swipeSuppressUntil[id] && Date.now() < swipeSuppressUntil[id]) return;
+  const p = getProduct(id);
+  if (!p) return;
+  currentProduct = id;
+  document.getElementById('detBadge').textContent = p.cat.charAt(0).toUpperCase() + p.cat.slice(1);
+  document.getElementById('detTitle').textContent = p.name;
+  document.getElementById('detDesc').textContent = p.desc;
+
+  // Price
+  const discPct = p.origPrice > 0 ? Math.round((1 - p.price / p.origPrice) * 100) : 0;
+  document.getElementById('detPrice').textContent = `₹${p.price.toLocaleString('en-IN')} / ${p.unit}`;
+  const origEl = document.getElementById('detOrigPrice');
+  origEl.innerHTML = p.origPrice > 0
+    ? `<span class="price-original">₹${p.origPrice.toLocaleString('en-IN')}</span> <span class="price-discount">-${discPct}%</span>`
+    : '';
+  document.getElementById('detGstNote').textContent = `+ ${p.gstRate}% GST applicable`;
+
+  // Offer badge
+  const offerEl = document.getElementById('detOffer');
+  if (p.offer) { offerEl.textContent = '🔥 ' + p.offer; offerEl.classList.remove('hidden'); }
+  else offerEl.classList.add('hidden');
+
+  // Add to cart button
+  const addBtn = document.getElementById('detAddBtn');
+  addBtn.textContent = (p.inStock && p.enabled) ? '+ Add to Cart' : 'Unavailable';
+  addBtn.disabled = !(p.inStock && p.enabled);
+  addBtn.onclick = () => {
+    const ex = cart.find(i => i.id === id);
+    if (ex) ex.qty++;
+    else cart.push({ id, name: p.name, icon: p.icon, price: p.price, gstRate: p.gstRate, unit: p.unit, qty: 1 });
+    updateCart();
+    addBtn.textContent = '✓ Added!'; addBtn.style.background = 'var(--gold)'; addBtn.style.color = '#000';
+    setTimeout(() => { addBtn.textContent = '+ Add to Cart'; addBtn.style.background = ''; addBtn.style.color = ''; }, 1800);
+  };
+
+  // Specs
+  const specTbl = document.getElementById('detSpecs');
+  specTbl.innerHTML = p.specs.map(([k,v]) => `<tr><td>${k}</td><td>${v}</td></tr>`).join('');
+
+  // Features
+  document.getElementById('detFeatures').innerHTML = p.features.map(f => `<li>${f}</li>`).join('');
+
+  // Media gallery (4 images + video demo/fallback)
+  const media = getProductMedia(p);
+  currentDetailMedia = media.items;
+  currentDetailMediaIndex = 0;
+
+  // Gallery thumbs
+  const thumbsEl = document.getElementById('galleryThumbs');
+  thumbsEl.innerHTML = media.items.map((m, idx) => {
+    if (m.type === 'video') {
+      return `<button class="g-thumb ${idx === 0 ? 'active' : ''}" type="button" onclick="renderDetailMedia(${idx})"><i class="bi bi-play-fill"></i></button>`;
+    }
+    return `<button class="g-thumb ${idx === 0 ? 'active' : ''}" type="button" onclick="renderDetailMedia(${idx})"><img src="${m.src}" alt="${p.name} thumb ${idx + 1}" loading="lazy"></button>`;
+  }).join('');
+  renderDetailMedia(0);
+
+  // Keep separate demo section hidden when using media gallery
+  document.getElementById('detVideoWrap').classList.add('hidden');
+
+  document.getElementById('detailModal').classList.add('open');
+}
+
+function renderDetailMedia(index) {
+  const main = document.getElementById('galleryMain');
+  if (!main) return;
+  if (!currentDetailMedia.length) {
+    const p = getProduct(currentProduct);
+    main.innerHTML = `<div class="gallery-icon">${p ? p.icon : '📦'}</div>`;
+    return;
+  }
+  const safe = ((index % currentDetailMedia.length) + currentDetailMedia.length) % currentDetailMedia.length;
+  const media = currentDetailMedia[safe];
+  if (media.type === 'video') {
+    main.innerHTML = `<video controls playsinline preload="metadata" src="${media.src}"></video>`;
+  } else {
+    main.innerHTML = `<img src="${media.src}" alt="Product media ${safe + 1}">`;
+  }
+  document.querySelectorAll('#galleryThumbs .g-thumb').forEach((el, idx) => {
+    el.classList.toggle('active', idx === safe);
+  });
+  currentDetailMediaIndex = safe;
+}
+
+function detailTouchStart(e) {
+  const t = e.touches && e.touches[0];
+  if (!t) return;
+  detailSwipeStartX = t.clientX;
+}
+
+function detailTouchEnd(e) {
+  const t = e.changedTouches && e.changedTouches[0];
+  if (!t || !currentDetailMedia.length) return;
+  const dx = t.clientX - detailSwipeStartX;
+  if (Math.abs(dx) < 35) return;
+  renderDetailMedia(currentDetailMediaIndex + (dx < 0 ? 1 : -1));
+}
+
+function closeDetail() { document.getElementById('detailModal').classList.remove('open'); }
+
+function checkDelivery() {
+  const pin = document.getElementById('pincodeInput').value.trim();
+  if (pin.length !== 6) { document.getElementById('deliveryResult').textContent = 'Enter valid 6-digit pincode.'; return; }
+  const days = (parseInt(pin[0]) % 3) + 2;
+  document.getElementById('deliveryResult').textContent = `✅ Delivery in ${days}-${days+1} business days via ShipRocket`;
+}
+
+/* ─── INQUIRY ─── */
+function openInquiry(id) {
+  currentProduct = id;
+  const p = getProduct(id);
+  document.getElementById('inquiryProductName').textContent = p ? `Product: ${p.icon} ${p.name}` : '';
+  document.getElementById('inquiryModal').classList.add('open');
+}
+function closeInquiry() { document.getElementById('inquiryModal').classList.remove('open'); }
+
+function submitInquiry() {
+  const name = document.getElementById('iqName').value.trim();
+  const phone = document.getElementById('iqPhone').value.trim();
+  if (!name || !phone) { alert('Please enter your name and mobile number.'); return; }
+  const p = getProduct(currentProduct) || { name: 'General Inquiry' };
+  const msg = encodeURIComponent(`Hi Acculekhaa Team! 👋\n\nI am interested in: *${p.name}*\n\nName: ${name}\nPhone: ${phone}\nCity: ${document.getElementById('iqCity').value || 'N/A'}\n\nMessage: ${document.getElementById('iqMessage').value || 'Please share more details.'}\n\nSent from: www.acculekhaa.com/catalogue`);
+  // Send to WhatsApp
+  window.open(`https://wa.me/919032406513?text=${msg}`, '_blank');
+  // Save to CRM (mock)
+  inquiries.push({ name, phone, product: p.name, time: new Date().toLocaleString() });
+  closeInquiry();
+  alert('✅ Inquiry sent! Our team will contact you within 2 hours on WhatsApp.');
+}
+
+/* ─── CHECKOUT ─── */
+function openCheckout() {
+  toggleCart();
+  buildOrderSummary();
+  buildGSTPreview();
+  document.getElementById('checkoutModal').classList.add('open');
+}
+function closeCheckout() {
+  document.getElementById('checkoutModal').classList.remove('open');
+  document.getElementById('checkoutForm').style.display = 'block';
+  document.getElementById('orderSuccess').style.display = 'none';
+  cart = []; updateCart();
+  document.querySelectorAll('.product-card-wrap').forEach(wrap => {
+    const addBtn = wrap.querySelector('.btn-add-card');
+    if (addBtn) addBtn.style.display = '';
+    const stepper = wrap.querySelector('.card-stepper');
+    if (stepper) stepper.classList.remove('visible');
+  });
+}
+
+function buildOrderSummary() {
+  let subtotal = 0;
+  const html = cart.map(item => {
+    const line = item.price * item.qty;
+    subtotal += line;
+    return `<div style="display:flex;justify-content:space-between;font-size:.82rem;padding:4px 0;border-bottom:1px solid var(--border);">
+      <span>${item.icon} ${item.name} × ${item.qty}</span>
+      <span>₹${line.toLocaleString('en-IN')}</span></div>`;
+  }).join('');
+  const gst = Math.round(subtotal * 0.18);
+  document.getElementById('orderSummaryBlock').innerHTML = html +
+    `<div style="display:flex;justify-content:space-between;font-size:.82rem;padding:6px 0;"><span>GST (18%)</span><span>₹${gst.toLocaleString('en-IN')}</span></div>
+     <div style="display:flex;justify-content:space-between;font-weight:700;font-family:'Syne',sans-serif;color:var(--green-light);padding-top:6px;border-top:1px solid var(--border);">
+       <span>Total</span><span>₹${(subtotal+gst).toLocaleString('en-IN')}</span></div>`;
+}
+
+function buildGSTPreview() {
+  let subtotal = 0;
+  cart.forEach(i => subtotal += i.price * i.qty);
+  const gst = Math.round(subtotal * 0.18);
+  const total = subtotal + gst;
+  document.getElementById('gstLineItems').innerHTML = `
+    <div class="gst-line"><span>Supplier: Acculekhaa Technologies Pvt. Ltd.</span></div>
+    <div class="gst-line"><span>GSTIN: 36AABCA1234F1Z0</span></div>
+    <div class="gst-line"><span>SAC / HSN Codes</span><span>Varies by product</span></div>
+    <div class="gst-line"><span>Taxable Value</span><span>₹${subtotal.toLocaleString('en-IN')}</span></div>
+    <div class="gst-line"><span>SGST (9%)</span><span>₹${Math.round(subtotal*0.09).toLocaleString('en-IN')}</span></div>
+    <div class="gst-line"><span>CGST (9%)</span><span>₹${Math.round(subtotal*0.09).toLocaleString('en-IN')}</span></div>
+    <div class="gst-line"><span>Total (incl. GST)</span><span>₹${total.toLocaleString('en-IN')}</span></div>`;
+}
+
+function selectPayment(mode, btn) {
+  paymentMethod = mode;
+  document.querySelectorAll('#checkoutModal .tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('onlinePayNote').style.display = mode === 'online' ? 'block' : 'none';
+  document.getElementById('codNote').style.display = mode === 'cod' ? 'block' : 'none';
+}
+
+function sendOTP() {
+  const phone = document.getElementById('phone').value.trim();
+  if (!phone || phone.length < 10) { alert('Enter valid mobile number'); return; }
+  mockOTP = Math.floor(100000 + Math.random() * 900000).toString();
+  document.getElementById('otpField').style.display = 'block';
+  const btn = document.getElementById('otpBtn');
+  btn.textContent = 'Resend'; btn.classList.add('sent');
+  alert(`📱 OTP sent to ${phone}\n\n[DEMO] Your OTP is: ${mockOTP}`);
+}
+
+function placeOrder() {
+  const firstName = document.getElementById('firstName').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const phone = document.getElementById('phone').value.trim();
+  const address = document.getElementById('address').value.trim();
+  const otp = document.getElementById('otpInput').value.trim();
+
+  if (!firstName || !email || !phone) { alert('Please fill Name, Email and Phone'); return; }
+  if (!address) { alert('Please enter delivery address'); return; }
+  if (document.getElementById('otpField').style.display !== 'none' && otp !== mockOTP) {
+    alert('Invalid OTP. Please try again.'); return;
+  }
+
+  // Build GST bill
+  let subtotal = 0;
+  cart.forEach(i => subtotal += i.price * i.qty);
+  const gst = Math.round(subtotal * 0.18);
+  const total = subtotal + gst;
+  const orderId = 'ACL-' + Date.now().toString().slice(-6);
+
+  // Store order (mock CRM)
+  orders.push({
+    id: orderId, customer: firstName, email, phone,
+    items: [...cart], subtotal, gst, total,
+    payment: paymentMethod, status: 'Pending', time: new Date().toLocaleString()
+  });
+
+  // WhatsApp notification to team
+  const cartSummary = cart.map(i => `${i.icon} ${i.name} ×${i.qty}`).join(', ');
+  const waMsg = encodeURIComponent(`🔔 NEW ORDER #${orderId}\nCustomer: ${firstName}\nPhone: ${phone}\nEmail: ${email}\nItems: ${cartSummary}\nTotal: ₹${total.toLocaleString('en-IN')} (incl. GST)\nPayment: ${paymentMethod.toUpperCase()}\nAddress: ${address}`);
+  // In production: fetch to backend which sends WhatsApp via API
+  // window.open(`https://wa.me/919032406513?text=${waMsg}`, '_blank');
+
+  // Show success with GST Bill
+  document.getElementById('finalGstBill').innerHTML = `
+    <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:1rem;margin-bottom:12px;color:var(--green-light);">🧾 GST Tax Invoice</div>
+    <div class="gst-line"><span>Order ID</span><span>${orderId}</span></div>
+    <div class="gst-line"><span>Customer</span><span>${firstName}</span></div>
+    <div class="gst-line"><span>GSTIN</span><span>${document.getElementById('gstin').value || 'N/A'}</span></div>
+    <div class="gst-line"><span>Subtotal</span><span>₹${subtotal.toLocaleString('en-IN')}</span></div>
+    <div class="gst-line"><span>SGST (9%)</span><span>₹${Math.round(subtotal*0.09).toLocaleString('en-IN')}</span></div>
+    <div class="gst-line"><span>CGST (9%)</span><span>₹${Math.round(subtotal*0.09).toLocaleString('en-IN')}</span></div>
+    <div class="gst-line"><span>Grand Total</span><span>₹${total.toLocaleString('en-IN')}</span></div>
+    <div style="font-size:.72rem;color:var(--text-muted);margin-top:8px;">Acculekhaa Technologies Pvt. Ltd. | GSTIN: 36AABCA1234F1Z0 | www.acculekhaa.com</div>`;
+
+  document.getElementById('checkoutForm').style.display = 'none';
+  document.getElementById('orderSuccess').style.display = 'block';
+}
+
+/* ─── LOGIN ─── */
+function openLoginModal() { document.getElementById('loginModal').classList.add('open'); }
+function closeLoginModal() { document.getElementById('loginModal').classList.remove('open'); }
+
+function setLoginMode(mode, btn) {
+  loginMode = mode;
+  document.querySelectorAll('.login-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('loginFormArea').style.display = mode === 'user' ? 'block' : 'none';
+  document.getElementById('adminLoginArea').style.display = mode === 'admin' ? 'block' : 'none';
+}
+
+function loginSendOTP() {
+  const phone = document.getElementById('loginPhone').value.trim();
+  if (!phone) { alert('Enter mobile number'); return; }
+  loginMockOTP = Math.floor(100000 + Math.random() * 900000).toString();
+  document.getElementById('loginOtpRow').style.display = 'block';
+  alert(`📱 OTP: ${loginMockOTP} (Demo)`);
+}
+
+function doLogin() {
+  if (loginMode === 'admin') {
+    const u = document.getElementById('adminUser').value;
+    const pw = document.getElementById('adminPass').value;
+    if (u === 'aa@acculekhaa.com' && pw === 'aa') {
+      isAdmin = true;
+      document.getElementById('adminBar').classList.add('show');
+      document.getElementById('loginBtn').textContent = '🛡️ Admin';
+      closeLoginModal();
+      renderAllProducts();
+      syncTopOffsets();
+      alert('✅ Logged in as Admin');
+    } else {
+      alert('Invalid admin credentials. \nUsername: admin@acculekhaa.com\nPassword: Admin@123');
+    }
+  } else {
+    const otp = document.getElementById('loginOtp').value.trim();
+    if (otp === loginMockOTP) {
+      currentUser = { phone: document.getElementById('loginPhone').value };
+      document.getElementById('loginBtn').textContent = '👤 ' + currentUser.phone.slice(-4);
+      closeLoginModal();
+    } else {
+      alert('Invalid OTP');
+    }
+  }
+}
+
+function logoutAdmin() {
+  isAdmin = false;
+  document.getElementById('adminBar').classList.remove('show');
+  document.getElementById('loginBtn').textContent = 'Login';
+  renderAllProducts();
+  syncTopOffsets();
+}
+
+/* ─── ADMIN PANEL ─── */
+function openAdminPanel() {
+  const list = document.getElementById('adminProductList');
+  list.innerHTML = PRODUCTS.map((p, idx) => `
+    <div class="admin-product-wrap">
+    <div class="admin-product-row">
+      <span style="font-size:1.4rem;">${p.icon}</span>
+      <div style="flex:1;">
+        <div style="font-family:'Syne',sans-serif;font-size:.88rem;font-weight:700;">${p.name}</div>
+        <div style="font-size:.74rem;color:var(--text-muted);">₹${p.price.toLocaleString('en-IN')} · ${p.cat}</div>
+      </div>
+      <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap;">
+        <div>
+          <div style="font-size:.68rem;color:var(--text-muted);margin-bottom:2px;">ENABLED</div>
+          <label class="admin-toggle">
+            <input type="checkbox" ${p.enabled ? 'checked' : ''} onchange="toggleProd(${idx},'enabled',this.checked)">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div>
+          <div style="font-size:.68rem;color:var(--text-muted);margin-bottom:2px;">IN STOCK</div>
+          <label class="admin-toggle">
+            <input type="checkbox" ${p.inStock ? 'checked' : ''} onchange="toggleProd(${idx},'inStock',this.checked)">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div>
+          <div style="font-size:.68rem;color:var(--text-muted);margin-bottom:2px;">NEW BADGE</div>
+          <label class="admin-toggle">
+            <input type="checkbox" ${p.isNew ? 'checked' : ''} onchange="toggleProd(${idx},'isNew',this.checked)">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div>
+          <div style="font-size:.68rem;color:var(--text-muted);margin-bottom:2px;">PRICE</div>
+          <input type="number" value="${p.price}" style="width:90px;background:var(--dark);border:1px solid var(--border);border-radius:6px;padding:4px 8px;color:var(--text);font-size:.78rem;" onchange="updatePrice(${idx},this.value)">
+        </div>
+        <div>
+          <div style="font-size:.68rem;color:var(--text-muted);margin-bottom:2px;">SALE</div>
+          <label class="admin-toggle">
+            <input type="checkbox" ${p.offer ? 'checked' : ''} onchange="toggleSale(${idx},this.checked)">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <button class="btn-learn" type="button" onclick="toggleMediaEditor(${idx})">Media</button>
+      </div>
+    </div>
+    <div class="admin-media-editor hidden" id="media-edit-${idx}">
+      <div class="admin-media-grid">
+        <div>
+          <div class="admin-mini-label">Offer Text</div>
+          <input class="admin-mini-inp" type="text" value="${escapeHtmlAttr(p.offer || '')}" placeholder="e.g. 20% OFF" onchange="updateOffer(${idx},this.value)">
+        </div>
+        <div>
+          <div class="admin-mini-label">Video URL</div>
+          <input class="admin-mini-inp" type="text" value="${escapeHtmlAttr((p.videoUrl || ''))}" placeholder="MP4 URL (blank = default)" onchange="updateVideoUrl(${idx},this.value)">
+        </div>
+        <div>
+          <div class="admin-mini-label">Image 1 URL</div>
+          <input class="admin-mini-inp" type="text" value="${escapeHtmlAttr(((p.images && p.images[0]) || ''))}" placeholder="Blank = default image 1" onchange="updateImageUrl(${idx},0,this.value)">
+        </div>
+        <div>
+          <div class="admin-mini-label">Image 2 URL</div>
+          <input class="admin-mini-inp" type="text" value="${escapeHtmlAttr(((p.images && p.images[1]) || ''))}" placeholder="Blank = default image 2" onchange="updateImageUrl(${idx},1,this.value)">
+        </div>
+        <div>
+          <div class="admin-mini-label">Image 3 URL</div>
+          <input class="admin-mini-inp" type="text" value="${escapeHtmlAttr(((p.images && p.images[2]) || ''))}" placeholder="Blank = default image 3" onchange="updateImageUrl(${idx},2,this.value)">
+        </div>
+        <div>
+          <div class="admin-mini-label">Image 4 URL</div>
+          <input class="admin-mini-inp" type="text" value="${escapeHtmlAttr(((p.images && p.images[3]) || ''))}" placeholder="Blank = default image 4" onchange="updateImageUrl(${idx},3,this.value)">
+        </div>
+      </div>
+    </div>
+    </div>`).join('');
+  document.getElementById('adminPanel').classList.add('open');
+}
+
+function closeAdminPanel() {
+  document.getElementById('adminPanel').classList.remove('open');
+  renderAllProducts();
+}
+
+function toggleProd(idx, field, val) { PRODUCTS[idx][field] = val; }
+function updatePrice(idx, val) { PRODUCTS[idx].price = parseInt(val) || PRODUCTS[idx].price; }
+function toggleSale(idx, val) { PRODUCTS[idx].offer = val ? (PRODUCTS[idx].offer || 'SALE') : ''; }
+function updateOffer(idx, val) { PRODUCTS[idx].offer = (val || '').trim(); }
+function updateVideoUrl(idx, val) { PRODUCTS[idx].videoUrl = (val || '').trim(); }
+function updateImageUrl(idx, imageIndex, val) {
+  if (!Array.isArray(PRODUCTS[idx].images)) PRODUCTS[idx].images = [];
+  PRODUCTS[idx].images[imageIndex] = (val || '').trim();
+}
+function toggleMediaEditor(idx) {
+  const panel = document.getElementById('media-edit-' + idx);
+  if (panel) panel.classList.toggle('hidden');
+}
+function escapeHtmlAttr(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/"/g, '&quot;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
+function syncTopOffsets() {
+  const admin = document.getElementById('adminBar');
+  const social = document.querySelector('.top-social');
+  const adminH = (admin && admin.classList.contains('show')) ? admin.offsetHeight : 0;
+  const socialH = social ? social.offsetHeight : 0;
+  document.documentElement.style.setProperty('--admin-h', adminH + 'px');
+  document.documentElement.style.setProperty('--top-social-h', socialH + 'px');
+}
+
+/* ─── REPORTS ─── */
+function showReports() {
+  const el = document.getElementById('reportsSection');
+  el.classList.toggle('hidden');
+  if (!el.classList.contains('hidden')) {
+    showReport('orders', document.querySelector('.report-tab-btn'));
+    el.scrollIntoView({ behavior: 'smooth' });
+  }
+}
+
+function showReport(type, btn) {
+  document.querySelectorAll('.report-tab-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  const content = document.getElementById('reportContent');
+
+  if (type === 'orders') {
+    content.innerHTML = `<div style="overflow-x:auto;"><table class="report-table">
+      <thead><tr><th>Order ID</th><th>Customer</th><th>Phone</th><th>Items</th><th>Total</th><th>Payment</th><th>Status</th><th>Date</th></tr></thead>
+      <tbody>${orders.length ? orders.map(o => `<tr>
+        <td style="color:var(--green-light);font-weight:600;">${o.id}</td>
+        <td>${o.customer}</td><td>${o.phone}</td>
+        <td style="font-size:.75rem;">${o.items.map(i => i.name).join(', ')}</td>
+        <td>₹${o.total.toLocaleString('en-IN')}</td>
+        <td>${o.payment.toUpperCase()}</td>
+        <td><span class="status-chip paid">${o.status}</span></td>
+        <td style="font-size:.75rem;">${o.time}</td></tr>`).join('')
+        : '<tr><td colspan="8" style="text-align:center;color:var(--text-muted);padding:24px;">No orders yet</td></tr>'}</tbody>
+    </table></div>`;
+  } else if (type === 'inquiries') {
+    content.innerHTML = `<div style="overflow-x:auto;"><table class="report-table">
+      <thead><tr><th>Name</th><th>Phone</th><th>Product</th><th>Date</th></tr></thead>
+      <tbody>${inquiries.length ? inquiries.map(i => `<tr>
+        <td>${i.name}</td><td>${i.phone}</td><td>${i.product}</td>
+        <td style="font-size:.75rem;">${i.time}</td></tr>`).join('')
+        : '<tr><td colspan="4" style="text-align:center;color:var(--text-muted);padding:24px;">No inquiries yet</td></tr>'}</tbody>
+    </table></div>`;
+  } else if (type === 'customers') {
+    const unique = [...new Set([...orders.map(o => o.phone), ...inquiries.map(i => i.phone)])];
+    content.innerHTML = `<div style="text-align:center;padding:24px;"><div style="font-size:2rem;font-weight:800;color:var(--green-light);font-family:'Syne',sans-serif;">${unique.length}</div><div style="color:var(--text-muted);font-size:.85rem;">Unique Customers</div></div>`;
+  } else if (type === 'gst') {
+    const totalSales = orders.reduce((s, o) => s + o.subtotal, 0);
+    const totalGST = orders.reduce((s, o) => s + o.gst, 0);
+    content.innerHTML = `<div class="gst-bill-preview">
+      <div class="gst-line"><span>Total Orders</span><span>${orders.length}</span></div>
+      <div class="gst-line"><span>Taxable Value</span><span>₹${totalSales.toLocaleString('en-IN')}</span></div>
+      <div class="gst-line"><span>Total GST Collected</span><span>₹${totalGST.toLocaleString('en-IN')}</span></div>
+      <div class="gst-line"><span>SGST (9%)</span><span>₹${Math.round(totalGST/2).toLocaleString('en-IN')}</span></div>
+      <div class="gst-line"><span>CGST (9%)</span><span>₹${Math.round(totalGST/2).toLocaleString('en-IN')}</span></div>
+      <div class="gst-line"><span>Grand Total Revenue</span><span>₹${(totalSales+totalGST).toLocaleString('en-IN')}</span></div>
+    </div>`;
+  }
+}
+
+/* ─── SHARE ─── */
+function copyShareLink() {
+  const url = 'https://www.acculekhaa.com/catalogue';
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(url).then(() => alert('✅ Catalogue link copied! Share it anywhere.'));
+  } else {
+    prompt('Copy this link:', url);
+  }
+}
+
+/* ─── CLOSE ON OUTSIDE CLICK ─── */
+document.getElementById('detailModal').addEventListener('click', function(e) {
+  if (e.target === this) closeDetail();
+});
+document.getElementById('checkoutModal').addEventListener('click', function(e) {
+  if (e.target === this) closeCheckout();
+});
+document.getElementById('inquiryModal').addEventListener('click', function(e) {
+  if (e.target === this) closeInquiry();
+});
+document.getElementById('loginModal').addEventListener('click', function(e) {
+  if (e.target === this) closeLoginModal();
+});
+document.getElementById('adminPanel').addEventListener('click', function(e) {
+  if (e.target === this) closeAdminPanel();
+});
+document.getElementById('galleryMain').addEventListener('touchstart', detailTouchStart, { passive: true });
+document.getElementById('galleryMain').addEventListener('touchend', detailTouchEnd, { passive: true });
+
+/* ─── INIT ─── */
+renderAllProducts();
+syncTopOffsets();
+window.addEventListener('resize', syncTopOffsets);
+</script>
+</body>
+</html>
